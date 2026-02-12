@@ -13,3 +13,12 @@
 - TypeScript + React standard linting
 - Codebase structured under `src/` directory
 - Import alias enabled (`@/`)
+
+## [2026-02-12] — Week 2 Day 1
+
+### CSV Upload (Preview Stage)
+- Implemented CSV file upload in UI
+- Read file content using FileReader
+- Displayed file metadata (chars, lines, rows)
+- Added header preview
+
