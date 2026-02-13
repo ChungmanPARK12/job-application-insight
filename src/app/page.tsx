@@ -1,7 +1,11 @@
+// src/app/page.tsx
 "use client";
 
 import React, { useMemo, useState } from "react";
 import { parseCsvText } from "@/domains/processA/parsers/csv";
+
+import { runCsvPipeline } from "@/lib/csv/pipeline";
+import type { ApplicationRecord } from "@/types/ApplicationRecord";
 
 type LoadState =
   | { status: "idle" }
@@ -22,6 +26,10 @@ const readFileAsText = (file: File): Promise<string> => {
 export default function Home() {
   const [state, setState] = useState<LoadState>({ status: "idle" });
 
+  // ✅ Added: pipeline results state (optional but useful for Week 2)
+  const [records, setRecords] = useState<ApplicationRecord[] | null>(null);
+  const [pipelineError, setPipelineError] = useState<string | null>(null);
+
   const onSelectFile: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -31,6 +39,10 @@ export default function Home() {
       setState({ status: "error", message: "Please upload a .csv file." });
       return;
     }
+
+    // ✅ reset previous results when a new file is selected
+    setRecords(null);
+    setPipelineError(null);
 
     setState({ status: "loading" });
 
@@ -51,6 +63,18 @@ export default function Home() {
 
     const parsed = parseCsvText(state.text);
 
+    // ✅ Added: run pipeline right here (this is the exact “where”)
+    const result = runCsvPipeline(parsed);
+
+    if (!result.ok) {
+      // Keep preview visible, but show pipeline error and no records
+      setPipelineError(result.message);
+      setRecords(null);
+    } else {
+      setPipelineError(null);
+      setRecords(result.records);
+    }
+
     return {
       fileName: state.fileName,
       charCount: state.text.length,
@@ -60,7 +84,6 @@ export default function Home() {
       firstRows: parsed.rows.slice(0, 5),
     };
   }, [state]);
-
 
   return (
     <main style={{ padding: 24, maxWidth: 900 }}>
@@ -79,6 +102,13 @@ export default function Home() {
         {state.status === "error" && (
           <p style={{ color: "crimson" }}>
             Error: {state.message}
+          </p>
+        )}
+
+        {/* ✅ Added: pipeline-level validation error (missing required columns etc.) */}
+        {pipelineError && (
+          <p style={{ color: "crimson", marginTop: 12 }}>
+            Pipeline Error: {pipelineError}
           </p>
         )}
 
@@ -106,9 +136,18 @@ export default function Home() {
                 {preview.firstRows.map((r) => r.join(" | ")).join("\n")}
               </pre>
             </div>
+
+            {/* ✅ Added: records sanity check preview */}
+            {records && (
+              <div style={{ marginTop: 12 }}>
+                <strong>ApplicationRecord[] preview (first 3)</strong>
+                <pre style={{ padding: 12, background: "#f7f7f7", borderRadius: 8, overflowX: "auto" }}>
+                  {JSON.stringify(records.slice(0, 3), null, 2)}
+                </pre>
+              </div>
+            )}
           </div>
         )}
-
       </section>
 
       <section style={{ marginTop: 24, opacity: 0.8 }}>
