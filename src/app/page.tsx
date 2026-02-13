@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { parseCsvText } from "@/domains/processA/parsers/csv";
 
 type LoadState =
   | { status: "idle" }
@@ -48,18 +49,18 @@ export default function Home() {
   const preview = useMemo(() => {
     if (state.status !== "loaded") return null;
 
-    const lines = state.text.split(/\r?\n/).filter((l) => l.trim().length > 0);
-    const header = lines[0] ?? "";
-    const rowCount = Math.max(0, lines.length - 1);
+    const parsed = parseCsvText(state.text);
 
     return {
       fileName: state.fileName,
       charCount: state.text.length,
-      lineCount: lines.length,
-      rowCount,
-      header,
+      headers: parsed.headers,
+      colCount: parsed.headers.length,
+      rowCount: parsed.rows.length,
+      firstRows: parsed.rows.slice(0, 5),
     };
   }, [state]);
+
 
   return (
     <main style={{ padding: 24, maxWidth: 900 }}>
@@ -88,18 +89,26 @@ export default function Home() {
             </p>
             <p style={{ margin: 0 }}>
               <strong>Chars:</strong> {preview.charCount.toLocaleString()} /{" "}
-              <strong>Lines:</strong> {preview.lineCount.toLocaleString()} /{" "}
-              <strong>Rows:</strong> {preview.rowCount.toLocaleString()}
+              <strong>Columns:</strong> {preview.colCount} /{" "}
+              <strong>Rows:</strong> {preview.rowCount}
             </p>
 
             <div style={{ marginTop: 12 }}>
               <strong>Header preview</strong>
               <pre style={{ padding: 12, background: "#f7f7f7", borderRadius: 8, overflowX: "auto" }}>
-                {preview.header}
+                {preview.headers.join(" | ")}
+              </pre>
+            </div>
+
+            <div style={{ marginTop: 12 }}>
+              <strong>First 5 rows preview</strong>
+              <pre style={{ padding: 12, background: "#f7f7f7", borderRadius: 8, overflowX: "auto" }}>
+                {preview.firstRows.map((r) => r.join(" | ")).join("\n")}
               </pre>
             </div>
           </div>
         )}
+
       </section>
 
       <section style={{ marginTop: 24, opacity: 0.8 }}>
