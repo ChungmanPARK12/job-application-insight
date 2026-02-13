@@ -22,6 +22,26 @@
 - Displayed file metadata (chars, lines, rows)
 - Added header preview
 
-## [2026-02-13] — Week 2 Day 2
+## [2026-02-13] — Week 2: Data Stabilization Layer
+
+### Added
+- Header, internal field mapping (`HEADER_ALIASES`)
+- Status normalization (3 states only):
+  - No response
+  - Rejected
+  - Interview
+- Required column validation
+- `ApplicationRecord` model (UUID-based `application_id`)
+- Unified CSV pipeline:
+  - parse → mapping → validation → normalization → records
+
+### Updated
+- Integrated pipeline into `page.tsx`
+- Added `records` and `pipelineError` state
+- Added ApplicationRecord preview block
+
+Next:
+- Basic statistics calculation (interview conversion metrics)
+
 
 
