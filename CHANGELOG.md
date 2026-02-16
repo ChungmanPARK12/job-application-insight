@@ -43,5 +43,43 @@
 Next:
 - Basic statistics calculation (interview conversion metrics)
 
+## [2026-02-16]
+
+### Week 3 — Insight Engine (Foundation)
+
+- Created new analytics layer: `src/lib/stats/`
+- Introduced unified `StatsResult` structure:
+  - overall
+  - breakdowns
+  - meta
+- Implemented `buildStatsResult(records)` as entry point
+
+### Overall Statistics
+
+- Implemented `computeOverallStats()`
+  - total applications
+  - status counts (interview / rejected / no_response)
+  - interview conversion rate
+- Added minimum sample guard (rate returns `null` if dataset too small)
+- Added defensive status normalization (trim + lowercase handling)
+
+### UI Integration
+
+- Connected Stats Engine to `page.tsx`
+- Rendering full `StatsResult` JSON for debugging
+- Verified total and status counts match records
+
+---
+
+### Next
+
+- Implement category breakdowns
+- Then rule-based pattern detection
+
+
+
+
+
+
 
 

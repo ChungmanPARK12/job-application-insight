@@ -7,6 +7,9 @@ import { parseCsvText } from "@/domains/processA/parsers/csv";
 import { runCsvPipeline } from "@/lib/csv/pipeline";
 import type { ApplicationRecord } from "@/types/ApplicationRecord";
 
+// stats
+import { buildStatsResult } from "@/lib/stats";
+
 type LoadState =
   | { status: "idle" }
   | { status: "loading" }
@@ -26,7 +29,7 @@ const readFileAsText = (file: File): Promise<string> => {
 export default function Home() {
   const [state, setState] = useState<LoadState>({ status: "idle" });
 
-  // ✅ Added: pipeline results state (optional but useful for Week 2)
+  // ✅ pipeline results state
   const [records, setRecords] = useState<ApplicationRecord[] | null>(null);
   const [pipelineError, setPipelineError] = useState<string | null>(null);
 
@@ -40,7 +43,7 @@ export default function Home() {
       return;
     }
 
-    // ✅ reset previous results when a new file is selected
+    // reset previous results when a new file is selected
     setRecords(null);
     setPipelineError(null);
 
@@ -63,7 +66,7 @@ export default function Home() {
 
     const parsed = parseCsvText(state.text);
 
-    // ✅ Added: run pipeline right here (this is the exact “where”)
+    // run pipeline
     const result = runCsvPipeline(parsed);
 
     if (!result.ok) {
@@ -85,11 +88,17 @@ export default function Home() {
     };
   }, [state]);
 
+  // ✅ Week 3: StatsResult (computed only when records change)
+  const stats = useMemo(() => {
+    if (!records || records.length === 0) return null;
+    return buildStatsResult(records);
+  }, [records]);
+
   return (
     <main style={{ padding: 24, maxWidth: 900 }}>
       <h1 style={{ marginBottom: 8 }}>Job Application Insight System</h1>
       <p style={{ marginTop: 0, marginBottom: 24 }}>
-        Week 2 — Data Ready: Upload CSV and read it as data.
+        Week 3 — Insight Engine: Build numerical foundations (stats) before insight narration.
       </p>
 
       <section style={{ padding: 16, border: "1px solid #ddd", borderRadius: 8 }}>
@@ -105,7 +114,6 @@ export default function Home() {
           </p>
         )}
 
-        {/* ✅ Added: pipeline-level validation error (missing required columns etc.) */}
         {pipelineError && (
           <p style={{ color: "crimson", marginTop: 12 }}>
             Pipeline Error: {pipelineError}
@@ -125,24 +133,60 @@ export default function Home() {
 
             <div style={{ marginTop: 12 }}>
               <strong>Header preview</strong>
-              <pre style={{ padding: 12, background: "#f7f7f7", borderRadius: 8, overflowX: "auto" }}>
+              <pre
+                style={{
+                  padding: 12,
+                  background: "#f7f7f7",
+                  borderRadius: 8,
+                  overflowX: "auto",
+                }}
+              >
                 {preview.headers.join(" | ")}
               </pre>
             </div>
 
             <div style={{ marginTop: 12 }}>
               <strong>First 5 rows preview</strong>
-              <pre style={{ padding: 12, background: "#f7f7f7", borderRadius: 8, overflowX: "auto" }}>
+              <pre
+                style={{
+                  padding: 12,
+                  background: "#f7f7f7",
+                  borderRadius: 8,
+                  overflowX: "auto",
+                }}
+              >
                 {preview.firstRows.map((r) => r.join(" | ")).join("\n")}
               </pre>
             </div>
 
-            {/* ✅ Added: records sanity check preview */}
             {records && (
               <div style={{ marginTop: 12 }}>
                 <strong>ApplicationRecord[] preview (first 3)</strong>
-                <pre style={{ padding: 12, background: "#f7f7f7", borderRadius: 8, overflowX: "auto" }}>
+                <pre
+                  style={{
+                    padding: 12,
+                    background: "#f7f7f7",
+                    borderRadius: 8,
+                    overflowX: "auto",
+                  }}
+                >
                   {JSON.stringify(records.slice(0, 3), null, 2)}
+                </pre>
+              </div>
+            )}
+
+            {stats && (
+              <div style={{ marginTop: 12 }}>
+                <strong>StatsResult (Week 3)</strong>
+                <pre
+                  style={{
+                    padding: 12,
+                    background: "#f7f7f7",
+                    borderRadius: 8,
+                    overflowX: "auto",
+                  }}
+                >
+                  {JSON.stringify(stats, null, 2)}
                 </pre>
               </div>
             )}
@@ -150,13 +194,19 @@ export default function Home() {
         )}
       </section>
 
-      <section style={{ marginTop: 24, opacity: 0.8 }}>
-        <h3>Next steps</h3>
+      <section style={{ marginTop: 24, opacity: 0.9 }}>
+        <h3>Work status</h3>
         <ul>
-          <li>Day 2: CSV parsing (rows/columns)</li>
-          <li>Day 3: Header normalization + mapping to ApplicationRow</li>
-          <li>Day 4: Validation (required columns)</li>
-          <li>Day 5: Basic stats</li>
+          <li>✅ CSV upload + read text</li>
+          <li>✅ CSV parsing (rows/columns)</li>
+          <li>✅ Header normalization</li>
+          <li>✅ Required column validation</li>
+          <li>✅ Status normalization (3 states)</li>
+          <li>✅ ApplicationRecord[] generation</li>
+          <li>✅ Week 3: Overall stats (StatsResult scaffolded + meta)</li>
+          <li>🟡 Week 3: Category breakdowns (job_source / location / month / position keyword)</li>
+          <li>⬜ Week 3: Rule-based pattern detection (sample guard + comparisons)</li>
+          <li>⬜ Week 3: Insight narration (cautious phrasing)</li>
         </ul>
       </section>
     </main>
