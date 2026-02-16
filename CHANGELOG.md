@@ -56,7 +56,7 @@ Next:
 
 ### Overall Statistics
 
-- Implemented `computeOverallStats()`
+- Implemented `computeOverallStats()` in overall.ts
   - total applications
   - status counts (interview / rejected / no_response)
   - interview conversion rate
