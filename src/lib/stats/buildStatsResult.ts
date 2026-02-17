@@ -3,13 +3,24 @@
 import type { ApplicationRecord } from "@/types/ApplicationRecord";
 import type { StatsResult, Status3 } from "./types";
 import { computeOverallStats } from "./overall";
+import {
+  breakdownByJobSource,
+  breakdownByLocation,
+  breakdownByMonth,
+  breakdownByPositionKeyword,
+} from "./breakdown";
 
 const STATUS_VALUES: Status3[] = ["interview", "rejected", "no_response"];
 
 export const buildStatsResult = (records: ApplicationRecord[]): StatsResult => {
   return {
     overall: computeOverallStats(records),
-    breakdowns: [], // Task 5에서 채움
+    breakdowns: [
+      breakdownByJobSource(records), // ✅ Task 5: first breakdown
+      breakdownByLocation(records),
+      breakdownByMonth(records),
+      breakdownByPositionKeyword(records),
+    ],
     meta: {
       generated_at: new Date().toISOString(),
       status_values: STATUS_VALUES,

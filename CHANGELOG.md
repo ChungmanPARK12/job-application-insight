@@ -76,6 +76,25 @@ Next:
 - Implement category breakdowns
 - Then rule-based pattern detection
 
+## [2026-02-17]
+
+### Week 3 — Stats Engine (Foundation)
+
+- Added breakdowns:
+  - job_source
+  - location
+  - month (applied_date → YYYY-MM, invalid → (invalid_date))
+  - position_keyword (intern/junior/graduate/mid/senior/lead/manager/other)
+- Connected `StatsResult` rendering in `src/app/page.tsx` for debugging
+
+### Next Plan
+- Rule-based pattern detection
+
+feat(stats): add breakdowns by source/location/month/position keyword
+
+
+
+
 
 
 

@@ -204,8 +204,8 @@ export default function Home() {
           <li>✅ Status normalization (3 states)</li>
           <li>✅ ApplicationRecord[] generation</li>
           <li>✅ Week 3: Overall stats (StatsResult scaffolded + meta)</li>
-          <li>🟡 Week 3: Category breakdowns (job_source / location / month / position keyword)</li>
-          <li>⬜ Week 3: Rule-based pattern detection (sample guard + comparisons)</li>
+          <li>✅ Week 3: Category breakdowns (job_source / location / month / position keyword)</li>
+          <li>🟡 Week 3: Rule-based pattern detection (sample guard + comparisons)</li>
           <li>⬜ Week 3: Insight narration (cautious phrasing)</li>
         </ul>
       </section>
