@@ -92,10 +92,53 @@ Next:
 
 ## [2026-02-17]
 
-### Week 3 — Rule Engine(Rule based pattern detection)
+### Week 3 — Rule Engine (Pattern Detection & Narration)
 
-- Calculate the interview-rate based on StatsResults
-- PatternFinding, natural sentence creation
+- Implemented rule-based pattern detection on top of `StatsResult`
+  - Compare group interview_rate vs overall interview_rate
+  - Apply sample guards (overall / group)
+  - Apply minimum delta threshold
+- Introduced `PatternFinding` structure
+- Implemented natural sentence generation via `narrateInsights`
+  - Cautious phrasing ("In this dataset", "appears to...")
+  - Sample-size awareness
+
+---
+
+### Week 3 — Completion Summary
+
+- Stats Engine (overall + 4 breakdowns)
+- Rule-based pattern detection
+- Insight narration layer
+- End-to-end flow:
+  CSV → Structured Data → Stats → Breakdown → Pattern → Narrative Insight
+
+- Week 3 Goal Achieved:
+ - “Results can be explained in natural language.”
+
+## Week 4 — Presentation
+
+### Goal
+“Insights are understandable to others.”
+
+### Planned Scope
+
+- Minimal UI refinement
+  - Remove raw JSON debug view
+  - Highlight key metrics only
+
+- Insight card layout
+  - Overall summary card
+  - Top positive / negative patterns
+  - Clean breakdown presentation
+
+- README refinement
+  - Architecture flow explanation
+  - Design philosophy (cautious analysis)
+  - Limitations (small dataset guard)
+  - Sample output screenshots
+
+
 
 
 

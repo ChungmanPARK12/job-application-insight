@@ -3,13 +3,13 @@
 
 import React, { useMemo, useState } from "react";
 import { parseCsvText } from "@/domains/processA/parsers/csv";
-
 import { runCsvPipeline } from "@/lib/csv/pipeline";
 import type { ApplicationRecord } from "@/types/ApplicationRecord";
 
-// stats
+// Stats + Insights
 import { buildStatsResult } from "@/lib/stats";
 import { detectPatterns } from "@/lib/insights/detectPatterns";
+import { narrateInsights } from "@/lib/insights/narrateInsights";
 
 type LoadState =
   | { status: "idle" }
@@ -20,7 +20,6 @@ type LoadState =
 const readFileAsText = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-
     reader.onload = () => resolve(String(reader.result ?? ""));
     reader.onerror = () => reject(new Error("Failed to read the file."));
     reader.readAsText(file);
@@ -29,8 +28,6 @@ const readFileAsText = (file: File): Promise<string> => {
 
 export default function Home() {
   const [state, setState] = useState<LoadState>({ status: "idle" });
-
-  // ✅ pipeline results state
   const [records, setRecords] = useState<ApplicationRecord[] | null>(null);
   const [pipelineError, setPipelineError] = useState<string | null>(null);
 
@@ -38,16 +35,13 @@ export default function Home() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Accept CSV only (best-effort)
     if (!file.name.toLowerCase().endsWith(".csv")) {
       setState({ status: "error", message: "Please upload a .csv file." });
       return;
     }
 
-    // reset previous results when a new file is selected
     setRecords(null);
     setPipelineError(null);
-
     setState({ status: "loading" });
 
     try {
@@ -57,7 +51,6 @@ export default function Home() {
       const message = err instanceof Error ? err.message : "Unknown error.";
       setState({ status: "error", message });
     } finally {
-      // Allow re-uploading the same file by resetting the input value
       e.target.value = "";
     }
   };
@@ -66,12 +59,9 @@ export default function Home() {
     if (state.status !== "loaded") return null;
 
     const parsed = parseCsvText(state.text);
-
-    // run pipeline
     const result = runCsvPipeline(parsed);
 
     if (!result.ok) {
-      // Keep preview visible, but show pipeline error and no records
       setPipelineError(result.message);
       setRecords(null);
     } else {
@@ -89,22 +79,29 @@ export default function Home() {
     };
   }, [state]);
 
-  // ✅ Week 3: StatsResult (computed only when records change)
+  // 🟢 Stats Engine
   const stats = useMemo(() => {
     if (!records || records.length === 0) return null;
     return buildStatsResult(records);
   }, [records]);
 
+  // 🟢 Rule-based pattern detection
   const patterns = useMemo(() => {
     if (!stats) return [];
     return detectPatterns(stats);
   }, [stats]);
 
+  // 🟢 Insight narration
+  const insights = useMemo(() => {
+    if (!patterns || patterns.length === 0) return [];
+    return narrateInsights(patterns);
+  }, [patterns]);
+
   return (
     <main style={{ padding: 24, maxWidth: 900 }}>
       <h1 style={{ marginBottom: 8 }}>Job Application Insight System</h1>
       <p style={{ marginTop: 0, marginBottom: 24 }}>
-        Week 3 — Insight Engine: Build numerical foundations (stats) before insight narration.
+        Week 3 — Insight Engine: From raw data → stats → patterns → narrative insights.
       </p>
 
       <section style={{ padding: 16, border: "1px solid #ddd", borderRadius: 8 }}>
@@ -115,9 +112,7 @@ export default function Home() {
         {state.status === "loading" && <p>Loading…</p>}
 
         {state.status === "error" && (
-          <p style={{ color: "crimson" }}>
-            Error: {state.message}
-          </p>
+          <p style={{ color: "crimson" }}>Error: {state.message}</p>
         )}
 
         {pipelineError && (
@@ -128,73 +123,40 @@ export default function Home() {
 
         {preview && (
           <div style={{ marginTop: 16 }}>
-            <p style={{ margin: 0 }}>
+            <p>
               <strong>File:</strong> {preview.fileName}
             </p>
-            <p style={{ margin: 0 }}>
-              <strong>Chars:</strong> {preview.charCount.toLocaleString()} /{" "}
-              <strong>Columns:</strong> {preview.colCount} /{" "}
+            <p>
               <strong>Rows:</strong> {preview.rowCount}
             </p>
 
-            <div style={{ marginTop: 12 }}>
-              <strong>Header preview</strong>
-              <pre
-                style={{
-                  padding: 12,
-                  background: "#f7f7f7",
-                  borderRadius: 8,
-                  overflowX: "auto",
-                }}
-              >
-                {preview.headers.join(" | ")}
-              </pre>
-            </div>
-
-            <div style={{ marginTop: 12 }}>
-              <strong>First 5 rows preview</strong>
-              <pre
-                style={{
-                  padding: 12,
-                  background: "#f7f7f7",
-                  borderRadius: 8,
-                  overflowX: "auto",
-                }}
-              >
-                {preview.firstRows.map((r) => r.join(" | ")).join("\n")}
-              </pre>
-            </div>
-
-            {records && (
-              <div style={{ marginTop: 12 }}>
-                <strong>ApplicationRecord[] preview (first 3)</strong>
-                <pre
-                  style={{
-                    padding: 12,
-                    background: "#f7f7f7",
-                    borderRadius: 8,
-                    overflowX: "auto",
-                  }}
-                >
-                  {JSON.stringify(records.slice(0, 3), null, 2)}
-                </pre>
-              </div>
-            )}
-
             {stats && (
-              <div style={{ marginTop: 12 }}>
-                <strong>StatsResult (Week 3)</strong>
-                <pre
-                  style={{
-                    padding: 12,
-                    background: "#f7f7f7",
-                    borderRadius: 8,
-                    overflowX: "auto",
-                  }}
-                >
+              <>
+                <h3>StatsResult</h3>
+                <pre style={{ background: "#f7f7f7", padding: 12 }}>
                   {JSON.stringify(stats, null, 2)}
                 </pre>
-              </div>
+              </>
+            )}
+
+            {patterns.length > 0 && (
+              <>
+                <h3>Detected Patterns</h3>
+                <pre style={{ background: "#eef6ff", padding: 12 }}>
+                  {JSON.stringify(patterns, null, 2)}
+                </pre>
+              </>
+            )}
+
+            {insights.length > 0 && (
+              <>
+                <h3>Insight Narration</h3>
+                <ul>
+                  {insights.map((i, idx) => (
+                    <li key={idx}>{i.text}</li>
+                  ))}
+                </ul>
+              </>
             )}
           </div>
         )}
@@ -204,15 +166,15 @@ export default function Home() {
         <h3>Work status</h3>
         <ul>
           <li>✅ CSV upload + read text</li>
-          <li>✅ CSV parsing (rows/columns)</li>
+          <li>✅ CSV parsing</li>
           <li>✅ Header normalization</li>
           <li>✅ Required column validation</li>
-          <li>✅ Status normalization (3 states)</li>
-          <li>✅ ApplicationRecord[] generation</li>
-          <li>✅ Week 3: Overall stats (StatsResult scaffolded + meta)</li>
-          <li>✅ Week 3: Category breakdowns (job_source / location / month / position keyword)</li>
-          <li>🟡 Week 3: Rule-based pattern detection (sample guard + comparisons)</li>
-          <li>⬜ Week 3: Insight narration (cautious phrasing)</li>
+          <li>✅ Status normalization</li>
+          <li>✅ ApplicationRecord generation</li>
+          <li>✅ Overall stats</li>
+          <li>✅ Category breakdowns (4)</li>
+          <li>✅ Rule-based pattern detection</li>
+          <li>🟡 Insight narration (basic version implemented)</li>
         </ul>
       </section>
     </main>
