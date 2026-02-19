@@ -9,6 +9,7 @@ import type { ApplicationRecord } from "@/types/ApplicationRecord";
 
 // stats
 import { buildStatsResult } from "@/lib/stats";
+import { detectPatterns } from "@/lib/insights/detectPatterns";
 
 type LoadState =
   | { status: "idle" }
@@ -93,6 +94,11 @@ export default function Home() {
     if (!records || records.length === 0) return null;
     return buildStatsResult(records);
   }, [records]);
+
+  const patterns = useMemo(() => {
+    if (!stats) return [];
+    return detectPatterns(stats);
+  }, [stats]);
 
   return (
     <main style={{ padding: 24, maxWidth: 900 }}>

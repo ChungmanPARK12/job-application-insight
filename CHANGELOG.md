@@ -90,7 +90,15 @@ Next:
 ### Next Plan
 - Rule-based pattern detection
 
-feat(stats): add breakdowns by source/location/month/position keyword
+## [2026-02-17]
+
+### Week 3 — Rule Engine(Rule based pattern detection)
+
+- Calculate the interview-rate based on StatsResults
+- PatternFinding, natural sentence creation
+
+
+
 
 
 
