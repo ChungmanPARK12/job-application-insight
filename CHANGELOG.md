@@ -138,6 +138,25 @@ Next:
   - Limitations (small dataset guard)
   - Sample output screenshots
 
+## [2026-02-20]
+
+### Week 4 — Presentation Layer (Phase 1)
+
+- Removed raw JSON debug view from default UI
+- Added Insight Cards:
+  - Overall Summary
+  - Key Insights
+  - Breakdown Summary (4 dimensions)
+- Fixed breakdown mapping (dimension-based array structure)
+- Added debug toggle (developer-only)
+- Created structured test datasets:
+  - Signal-heavy dataset (LinkedIn / Adelaide bias)
+  - All No Response dataset (0% interview rate test)
+
+Status:
+Week 4 – Presentation MVP completed.
+Logic layer (Week 3) untouched.
+
 
 
 
