@@ -1,7 +1,7 @@
 // src/app/page.tsx
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { parseCsvText } from "@/domains/processA/parsers/csv";
 import { runCsvPipeline } from "@/lib/csv/pipeline";
 import type { ApplicationRecord } from "@/types/ApplicationRecord";
@@ -27,7 +27,11 @@ const readFileAsText = (file: File): Promise<string> => {
 };
 
 // ---------- UI helpers (presentation only) ----------
-const shell: React.CSSProperties = { padding: 24, maxWidth: 980, margin: "0 auto" };
+const shell: React.CSSProperties = {
+  padding: 24,
+  maxWidth: 980,
+  margin: "0 auto",
+};
 
 const Card = ({
   title,
@@ -49,11 +53,20 @@ const Card = ({
         background: "white",
       }}
     >
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 12,
+        }}
+      >
         <div>
           <h2 style={{ margin: 0, fontSize: 18 }}>{title}</h2>
           {subtitle ? (
-            <p style={{ margin: "6px 0 0 0", opacity: 0.75, lineHeight: 1.4 }}>{subtitle}</p>
+            <p style={{ margin: "6px 0 0 0", opacity: 0.75, lineHeight: 1.4 }}>
+              {subtitle}
+            </p>
           ) : null}
         </div>
         {right ? <div>{right}</div> : null}
@@ -84,7 +97,6 @@ const StatPill = ({ label, value }: { label: string; value: React.ReactNode }) =
 
 const formatPct = (v: unknown) => {
   if (typeof v !== "number" || !Number.isFinite(v)) return null;
-  // assume 0~1 or 0~100, handle both
   const p = v <= 1 ? v * 100 : v;
   return `${p.toFixed(1)}%`;
 };
@@ -104,40 +116,6 @@ const pickFirstObject = (...vals: unknown[]) => {
 };
 
 type BreakdownRow = { label: string; count?: number; interviewRate?: number };
-
-const normalizeBreakdownRows = (raw: unknown): BreakdownRow[] => {
-  if (!raw) return [];
-
-  // Case 1) already array-ish
-  if (Array.isArray(raw)) {
-    return raw
-      .map((r) => {
-        const obj = typeof r === "object" && r ? (r as any) : null;
-        if (!obj) return null;
-        const label = String(obj.label ?? obj.key ?? obj.name ?? "Unknown");
-        const count = pickFirstNumber(obj.count, obj.total, obj.n);
-        const interviewRate = pickFirstNumber(obj.interviewRate, obj.interview_rate, obj.rate);
-        return { label, count: count ?? undefined, interviewRate: interviewRate ?? undefined };
-      })
-      .filter(Boolean) as BreakdownRow[];
-  }
-
-  // Case 2) object with rows/items/buckets/entries
-  const o = raw as any;
-  const arr = o.rows ?? o.items ?? o.buckets ?? o.entries ?? null;
-  if (Array.isArray(arr)) return normalizeBreakdownRows(arr);
-
-  // Case 3) map-like: { label: {count, ...}, ... }
-  if (raw && typeof raw === "object") {
-    return Object.entries(raw as Record<string, any>).map(([k, v]) => {
-      const count = pickFirstNumber(v?.count, v?.total, v?.n);
-      const interviewRate = pickFirstNumber(v?.interviewRate, v?.interview_rate, v?.rate);
-      return { label: k, count: count ?? undefined, interviewRate: interviewRate ?? undefined };
-    });
-  }
-
-  return [];
-};
 
 const BreakdownCard = ({
   title,
@@ -164,7 +142,9 @@ const BreakdownCard = ({
     >
       <div style={{ marginBottom: 10 }}>
         <div style={{ fontWeight: 700 }}>{title}</div>
-        {subtitle ? <div style={{ opacity: 0.7, fontSize: 13, marginTop: 4 }}>{subtitle}</div> : null}
+        {subtitle ? (
+          <div style={{ opacity: 0.7, fontSize: 13, marginTop: 4 }}>{subtitle}</div>
+        ) : null}
       </div>
 
       {top.length === 0 ? (
@@ -266,8 +246,7 @@ export default function Home() {
     if (!stats) return null;
     const s: any = stats;
 
-    const overallObj =
-      s.overall ?? s.summary ?? s.totals ?? null;
+    const overallObj = s.overall ?? s.summary ?? s.totals ?? null;
 
     const total =
       pickFirstNumber(overallObj?.total, overallObj?.applications, overallObj?.totalApplications, s.total) ??
@@ -276,25 +255,37 @@ export default function Home() {
     const interviewRate =
       pickFirstNumber(overallObj?.interviewRate, overallObj?.interview_rate, overallObj?.rate) ?? null;
 
+    // ✅ Your stats output uses by_status
     const statusCounts =
-      pickFirstObject(overallObj?.statusCounts, overallObj?.status_counts, overallObj?.statuses) ?? null;
+      pickFirstObject(overallObj?.by_status, overallObj?.statusCounts, overallObj?.status_counts, overallObj?.statuses) ??
+      pickFirstObject(s.by_status, s.statusCounts, s.status_counts) ??
+      null;
 
     return { total, interviewRate, statusCounts, overallObj };
   }, [stats, records?.length]);
 
+  // ✅ FIX: breakdowns is an ARRAY of { dimension, rows }
   const breakdowns = useMemo(() => {
     if (!stats) return null;
     const s: any = stats;
 
-    // try common shapes
-    const b = s.breakdowns ?? s.breakdown ?? s.byCategory ?? s.categories ?? null;
-    if (!b) return null;
+    if (!Array.isArray(s.breakdowns)) return null;
+
+    const findRows = (dimension: string) =>
+      (s.breakdowns.find((b: any) => b?.dimension === dimension)?.rows ?? []) as any[];
+
+    const mapRows = (rows: any[]): BreakdownRow[] =>
+      rows.map((r) => ({
+        label: String(r?.key ?? "Unknown"),
+        count: typeof r?.total === "number" ? r.total : undefined,
+        interviewRate: typeof r?.interview_rate === "number" ? r.interview_rate : undefined,
+      }));
 
     return {
-      job_source: normalizeBreakdownRows(b.job_source ?? b.jobSource ?? b.source),
-      location: normalizeBreakdownRows(b.location ?? b.locations),
-      month: normalizeBreakdownRows(b.month ?? b.months),
-      position_keyword: normalizeBreakdownRows(b.position_keyword ?? b.positionKeyword ?? b.keyword),
+      job_source: mapRows(findRows("job_source")),
+      location: mapRows(findRows("location")),
+      month: mapRows(findRows("month")),
+      position_keyword: mapRows(findRows("position_keyword")),
     };
   }, [stats]);
 
@@ -313,12 +304,16 @@ export default function Home() {
         title="CSV Upload"
         subtitle="Upload a .csv file. The system will validate headers, normalize statuses, compute stats, detect patterns, and narrate insights."
         right={
-          <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", userSelect: "none" }}>
-            <input
-              type="checkbox"
-              checked={debug}
-              onChange={(e) => setDebug(e.target.checked)}
-            />
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              cursor: "pointer",
+              userSelect: "none",
+            }}
+          >
+            <input type="checkbox" checked={debug} onChange={(e) => setDebug(e.target.checked)} />
             <span style={{ fontSize: 13, opacity: 0.8 }}>Show debug</span>
           </label>
         }
@@ -342,22 +337,29 @@ export default function Home() {
         {debug && pipeline ? (
           <div style={{ marginTop: 12 }}>
             <div style={{ fontSize: 13, opacity: 0.75, marginBottom: 6 }}>Debug (developer-only)</div>
-            <pre style={{ background: "#f7f7f7", padding: 12, borderRadius: 12, overflowX: "auto" }}>
-{JSON.stringify(
-  {
-    preview: {
-      fileName: pipeline.fileName,
-      charCount: pipeline.charCount,
-      headers: pipeline.headers,
-      rowCount: pipeline.rowCount,
-    },
-    stats,
-    patterns,
-    insights,
-  },
-  null,
-  2
-)}
+            <pre
+              style={{
+                background: "#f7f7f7",
+                padding: 12,
+                borderRadius: 12,
+                overflowX: "auto",
+              }}
+            >
+              {JSON.stringify(
+                {
+                  preview: {
+                    fileName: pipeline.fileName,
+                    charCount: pipeline.charCount,
+                    headers: pipeline.headers,
+                    rowCount: pipeline.rowCount,
+                  },
+                  stats,
+                  patterns,
+                  insights,
+                },
+                null,
+                2
+              )}
             </pre>
           </div>
         ) : null}
@@ -374,7 +376,7 @@ export default function Home() {
               <StatPill label="Applications" value={overall?.total ?? "—"} />
               <StatPill
                 label="Interview rate"
-                value={overall?.interviewRate != null ? (formatPct(overall.interviewRate) ?? "—") : "—"}
+                value={overall?.interviewRate != null ? formatPct(overall.interviewRate) ?? "—" : "—"}
               />
             </div>
 
@@ -422,21 +424,9 @@ export default function Home() {
                 gap: 12,
               }}
             >
-              <BreakdownCard
-                title="Job source"
-                subtitle="Top 3 sources"
-                rows={breakdowns?.job_source ?? []}
-              />
-              <BreakdownCard
-                title="Location"
-                subtitle="Top 3 locations"
-                rows={breakdowns?.location ?? []}
-              />
-              <BreakdownCard
-                title="Month"
-                subtitle="Top 3 months"
-                rows={breakdowns?.month ?? []}
-              />
+              <BreakdownCard title="Job source" subtitle="Top 3 sources" rows={breakdowns?.job_source ?? []} />
+              <BreakdownCard title="Location" subtitle="Top 3 locations" rows={breakdowns?.location ?? []} />
+              <BreakdownCard title="Month" subtitle="Top 3 months" rows={breakdowns?.month ?? []} />
               <BreakdownCard
                 title="Position keyword"
                 subtitle="Top 3 keywords"
