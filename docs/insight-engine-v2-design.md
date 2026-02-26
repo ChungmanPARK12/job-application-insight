@@ -1,4 +1,5 @@
 <!-- docs/insight-engine-v2-design.md -->
+## [2026-02-24]
 
 # Insight Engine v2 — Design Draft
 
@@ -70,3 +71,46 @@ Week3 Stats
 ---
 
 End of Day1 specification.
+
+## Day2 — Pattern Object Spec (Flexible Metrics)
+
+### Pattern Types
+- conversion_imbalance
+- distribution_concentration
+- target_narrowness
+
+### Strength
+- weak | strong
+
+### Pattern Object (Draft)
+```ts
+export type PatternType =
+  | "conversion_imbalance"
+  | "distribution_concentration"
+  | "target_narrowness";
+
+export type PatternStrength = "weak" | "strong";
+
+/**
+ * Flexible metrics per pattern type.
+ * v2 uses pattern objects as the bridge between Stats → Narration.
+ */
+export interface Pattern {
+  type: PatternType;
+  strength: PatternStrength;
+
+  /** Pattern-specific numeric metrics used for narration (Fact-first). */
+  metrics: Record<string, number>;
+
+  /**
+   * 0..1 confidence score.
+   * v2.0 may use a simple heuristic; later versions can refine weighting.
+   */
+  confidence: number;
+
+  /**
+   * Optional metadata (non-numeric) for narration support (e.g., dominantCategory).
+   * Kept optional to avoid bloating v2.0.
+   */
+  meta?: Record<string, string>;
+}
