@@ -11,6 +11,10 @@ import { buildStatsResult } from "@/lib/stats";
 import { detectPatterns } from "@/lib/insights/detectPatterns";
 import { narrateInsights } from "@/lib/insights/narrateInsights";
 
+import { runCorePatternDebug } from "@/lib/insights/_debug_corePatterns";
+
+runCorePatternDebug();
+
 type LoadState =
   | { status: "idle" }
   | { status: "loading" }

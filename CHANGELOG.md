@@ -180,6 +180,22 @@ Logic layer (Week 3) untouched.
 - Applied guardrail thresholds (30 / 50 sample logic)
 - Preserved existing Week3 stats and delta-based pattern detection (no breaking changes)
 
+### Debugging & Validation
+- Build verification: `npm run build` completed successfully (no TypeScript errors)
+- Runtime validation: `detectCorePatterns` executed against real stats output
+- Confirmed 3 strong patterns detected under test dataset:
+  - Conversion Imbalance (60 applications, 3% interview rate)
+  - Distribution Concentration (91.6% in single location)
+  - Target Narrowness (96.6% single keyword dominance)
+- Verified:
+  - Threshold logic applied correctly
+  - Confidence scoring (0.8 for 50+ samples) working as expected
+  - Meta fields (dominant_dimension, dominant_category, dominant_keyword) populated correctly
+
+### Next Step
+- Max 2 exposure + Strong priority array
+- Silence mode and Narrations connect, Fact -> Boundary -> reflection
+
 
 
 
