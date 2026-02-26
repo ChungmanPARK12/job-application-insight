@@ -1,5 +1,4 @@
 // src/lib/insights/detectPatterns.ts
-
 import type { StatsResult, BreakdownResult } from "@/lib/stats";
 
 export type PatternMetric = "interview_rate";

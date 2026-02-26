@@ -166,6 +166,20 @@ Logic layer (Week 3) untouched.
 - Standardized fields: type, strength, metrics, confidence
 - Preparing Day 3 Working, detailed in insight-engine-v2.md
 
+## [2026-02-27]
+
+### Day 3 — Pattern Detection Engine (Core v2)
+
+### Insights
+- Introduced `Pattern` type contract for Insight Engine v2
+- Added new core pattern detector: `detectCorePatterns.ts`
+- Implemented 3 statistical core patterns:
+  - Conversion Imbalance
+  - Distribution Concentration
+  - Target Narrowness
+- Applied guardrail thresholds (30 / 50 sample logic)
+- Preserved existing Week3 stats and delta-based pattern detection (no breaking changes)
+
 
 
 
