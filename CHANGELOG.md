@@ -196,6 +196,22 @@ Logic layer (Week 3) untouched.
 - Max 2 exposure + Strong priority array
 - Silence mode and Narrations connect, Fact -> Boundary -> reflection
 
+## [2026-03-02]
+
+### Day 4 — Statistical Guardrails
+
+### Insights
+- Added Silence Mode guardrail in `detectCorePatterns` (returns `[]` when overall sample size is below threshold)
+- Limited surfaced core patterns to max 2 (`slice(0, 2)`)
+
+### Debugging & Validation
+- Runtime verified `detectCorePatterns` now outputs `Array(2)` (previously `Array(3)`)
+- Confirmed prioritization works as intended:
+  - Conversion Imbalance + Distribution Concentration surfaced
+  - Target Narrowness suppressed due to max exposure rule
+
+
+
 
 
 

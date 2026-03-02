@@ -17,10 +17,24 @@ const DIST_STRONG_DOMINANT_MIN = 0.8;
 const TARGET_WEAK_DOMINANT_MIN = 0.75;
 const TARGET_STRONG_DOMINANT_MIN = 0.9;
 
+// Day4 thresholds
+const SILENCE_MIN_APPS = 20;
+const MAX_EXPOSED_PATTERNS = 2;
+
 export type DetectCorePatternsOptions = {
   // if you want to tune later without touching core logic
   minWeakApps?: number;
   minStrongApps?: number;
+
+  // Day4 knobs (optional)
+  silenceMinApps?: number;
+  maxExposed?: number;
+};
+
+const typePriority: Record<Pattern["type"], number> = {
+  conversion_imbalance: 3,
+  distribution_concentration: 2,
+  target_narrowness: 1,
 };
 
 export const detectCorePatterns = (
@@ -30,15 +44,26 @@ export const detectCorePatterns = (
   const minWeakApps = options.minWeakApps ?? MIN_WEAK_APPS;
   const minStrongApps = options.minStrongApps ?? MIN_STRONG_APPS;
 
+  const silenceMinApps = options.silenceMinApps ?? SILENCE_MIN_APPS;
+  const maxExposed = options.maxExposed ?? MAX_EXPOSED_PATTERNS;
+
   const totalApps = stats?.overall?.total ?? 0;
   const overallInterviewRate = stats?.overall?.interview_rate;
 
-  // Guardrail: if overall is missing or too small, return empty (Silence Mode handled later)
-  if (!overallInterviewRate || totalApps <= 0) return [];
+  // Day4 — Silence Mode: hard suppression for insufficient sample
+  if (totalApps < silenceMinApps) return [];
+
+  // Guardrail: if overall is missing or not meaningful, return empty
+  if (overallInterviewRate == null || totalApps <= 0) return [];
 
   const patterns: Pattern[] = [];
 
-  const p1 = checkConversionImbalance(totalApps, overallInterviewRate, minWeakApps, minStrongApps);
+  const p1 = checkConversionImbalance(
+    totalApps,
+    overallInterviewRate,
+    minWeakApps,
+    minStrongApps
+  );
   if (p1) patterns.push(p1);
 
   const p2 = checkDistributionConcentration(stats.breakdowns, totalApps, minWeakApps);
@@ -47,7 +72,25 @@ export const detectCorePatterns = (
   const p3 = checkTargetNarrowness(stats.breakdowns, totalApps, minWeakApps);
   if (p3) patterns.push(p3);
 
-  return patterns;
+  // Day4 — Prevent noisy surfacing:
+  // If everything is weak with low confidence, you can optionally suppress.
+  // For v2.0, keep it simple: rely on minWeakApps + silenceMinApps guardrails.
+
+  // Day4 — Prioritization + Max exposure
+  patterns.sort((a, b) => {
+    // 1) strong first
+    if (a.strength !== b.strength) {
+      return a.strength === "strong" ? -1 : 1;
+    }
+    // 2) higher confidence first
+    if (a.confidence !== b.confidence) {
+      return b.confidence - a.confidence;
+    }
+    // 3) fixed priority: Conversion > Distribution > Target
+    return typePriority[b.type] - typePriority[a.type];
+  });
+
+  return patterns.slice(0, maxExposed);
 };
 
 // --------------------------
