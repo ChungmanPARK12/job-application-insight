@@ -210,6 +210,15 @@ Logic layer (Week 3) untouched.
   - Conversion Imbalance + Distribution Concentration surfaced
   - Target Narrowness suppressed due to max exposure rule
 
+### Day 5 — Internal Scenario Testing
+
+- Added multi-scenario mock tests for `detectCorePatterns`
+- Verified Silence Mode (<20 samples)
+- Validated weak/strong boundary thresholds (30/50 samples, 7%/4%, 65%/80%, 75%/90%)
+- Confirmed max-2 exposure rule under 3-strong scenario
+- No unexpected false positives observed
+
+
 
 
 
