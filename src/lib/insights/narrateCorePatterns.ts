@@ -1,14 +1,7 @@
 // src/lib/insights/narrateCorePatterns.ts
 
-import type { Pattern } from "./types";
-
-export type InsightNarrative = {
-  pattern_type: Pattern["type"];
-  strength: Pattern["strength"];
-  fact: string;
-  boundary: string;
-  reflection: string;
-};
+import type { Pattern } from "./pattern.types";
+import type { InsightNarrative } from "./narration.types";
 
 // Neutral, report-style wording only
 export const narrateCorePatterns = (patterns: Pattern[]): InsightNarrative[] => {
@@ -16,16 +9,30 @@ export const narrateCorePatterns = (patterns: Pattern[]): InsightNarrative[] => 
 };
 
 const buildNarrative = (p: Pattern): InsightNarrative => {
+  let base: InsightNarrative;
+
   switch (p.type) {
     case "conversion_imbalance":
-      return narrateConversionImbalance(p);
+      base = narrateConversionImbalance(p);
+      break;
     case "distribution_concentration":
-      return narrateDistributionConcentration(p);
+      base = narrateDistributionConcentration(p);
+      break;
     case "target_narrowness":
-      return narrateTargetNarrowness(p);
+      base = narrateTargetNarrowness(p);
+      break;
     default:
-      return fallbackNarrative(p);
+      base = fallbackNarrative(p);
   }
+
+  // Day7 — Strength-based output control
+  // Weak → Fact + Boundary (remove reflection)
+  if (p.strength === "weak") {
+    const { reflection, ...rest } = base;
+    return rest;
+  }
+
+  return base;
 };
 
 const narrateConversionImbalance = (p: Pattern): InsightNarrative => {
@@ -37,7 +44,9 @@ const narrateConversionImbalance = (p: Pattern): InsightNarrative => {
     pattern_type: p.type,
     strength: p.strength,
     fact: `Total applications: ${applications}. Overall interview rate: ${pct}.`,
-    boundary: `This meets the ${p.strength} threshold for conversion imbalance under the current rules (sample size and rate). This is a descriptive signal based on recorded outcomes only.`,
+    boundary:
+      `This meets the ${p.strength} threshold for conversion imbalance under the current rules ` +
+      `(sample size and rate). This is a descriptive signal based on recorded outcomes only.`,
     reflection:
       `Which variables remained consistent across applications (role level, location, source, resume version)? ` +
       `Which single variable changed most often during this period?`,
@@ -54,7 +63,9 @@ const narrateDistributionConcentration = (p: Pattern): InsightNarrative => {
     pattern_type: p.type,
     strength: p.strength,
     fact: `${dim}: ${cat} accounts for ${pct} of applications.`,
-    boundary: `This meets the ${p.strength} threshold for distribution concentration under the current rules. Concentration does not imply effectiveness or ineffectiveness by itself.`,
+    boundary:
+      `This meets the ${p.strength} threshold for distribution concentration under the current rules. ` +
+      `Concentration does not imply effectiveness or ineffectiveness by itself.`,
     reflection:
       `Is this concentration intentional or constraint-driven? ` +
       `What alternative segment could be tracked in parallel without changing the primary scope?`,
@@ -71,7 +82,9 @@ const narrateTargetNarrowness = (p: Pattern): InsightNarrative => {
     pattern_type: p.type,
     strength: p.strength,
     fact: `Dominant target group: ${kw} (${pct}). Target groups observed: ${unique}.`,
-    boundary: `This meets the ${p.strength} threshold for target narrowness under the current rules. No outcome inference is made from targeting scope alone.`,
+    boundary:
+      `This meets the ${p.strength} threshold for target narrowness under the current rules. ` +
+      `No outcome inference is made from targeting scope alone.`,
     reflection:
       `What was the original reason for this targeting scope? ` +
       `What adjacent target group would be the smallest expansion to track?`,

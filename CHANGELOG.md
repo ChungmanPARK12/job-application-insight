@@ -228,6 +228,9 @@ Logic layer (Week 3) untouched.
 - Connected `detectCorePatterns` → `narrateCorePatterns`
 - Verified narrative output across test scenarios
 
+### Day 7 — Strength-Based Output Control
+- Weak patterns output Fact + Boundary only (reflection omitted); strong patterns include reflection
+
 
 
 

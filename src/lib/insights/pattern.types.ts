@@ -1,5 +1,4 @@
 // src/lib/insights/types.ts
-
 export type PatternType =
   | "conversion_imbalance"
   | "distribution_concentration"

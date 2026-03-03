@@ -2,7 +2,7 @@
 
 import type { StatsResult } from "@/lib/stats";
 import type { BreakdownDimension, BreakdownResult } from "@/lib/stats/types";
-import { Pattern, PatternStrength } from "./types";
+import { Pattern, PatternStrength } from "./pattern.types";
 
 // Day1 thresholds (draft v2.0)
 const MIN_WEAK_APPS = 30;
