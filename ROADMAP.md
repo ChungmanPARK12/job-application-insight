@@ -68,6 +68,7 @@ Day 7 — Strength-Based Output Control
 Day 8 — Stage Layer Integration
 - Added stage-aware tone adjustment
 - Maintained statistical neutrality
+- Confidence nuance
 
 Day 9 — Insight Prioritization Logic
 - Strong patterns prioritized

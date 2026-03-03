@@ -218,6 +218,17 @@ Logic layer (Week 3) untouched.
 - Confirmed max-2 exposure rule under 3-strong scenario
 - No unexpected false positives observed
 
+### Day 6 — Fact, Boundary, Reflection
+
+- Implemented neutral narrative structure (Fact → Boundary → Reflection)
+- Added pattern-specific templates:
+  - Conversion Imbalance
+  - Distribution Concentration
+  - Target Narrowness
+- Connected `detectCorePatterns` → `narrateCorePatterns`
+- Verified narrative output across test scenarios
+
+
 
 
 

@@ -2,6 +2,8 @@
 import { detectCorePatterns } from "./detectCorePatterns";
 import type { StatsResult } from "@/lib/stats";
 
+import { narrateCorePatterns } from "./narrateCorePatterns";
+
 export const runCorePatternDebug = () => {
   const cases: Array<{ name: string; mock: StatsResult }> = [
     // TEST 1 — Silence Mode (total < 20)
@@ -112,9 +114,15 @@ export const runCorePatternDebug = () => {
 
   for (const t of cases) {
     const out = detectCorePatterns(t.mock);
+
     // eslint-disable-next-line no-console
     console.log(`\n${t.name}`);
+
     // eslint-disable-next-line no-console
-    console.log(out);
+    console.log("patterns:", out);
+
+    // ✅ Day6: narrative output
+    // eslint-disable-next-line no-console
+    console.log("narratives:", narrateCorePatterns(out));
   }
 };
