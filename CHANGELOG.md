@@ -231,6 +231,19 @@ Logic layer (Week 3) untouched.
 ### Day 7 — Strength-Based Output Control
 - Weak patterns output Fact + Boundary only (reflection omitted); strong patterns include reflection
 
+## [2026-03-06]
+
+### Day 8 — Stage Layer Integration
+- Added stage-aware boundary tone in `narrateCorePatterns`
+- Applied confidence nuance without exposing numeric confidence
+- Fixed `applications` propagation in `detectCorePatterns`
+- Verified early / mid / late narrative boundary behavior
+
+### Day 9 — Insight Prioritization Logic
+- Strong patterns prioritized
+- Max 2 insights exposed
+- Overload prevention rule added
+
 
 
 

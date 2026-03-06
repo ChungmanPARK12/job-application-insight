@@ -76,21 +76,26 @@ export const detectCorePatterns = (
   // If everything is weak with low confidence, you can optionally suppress.
   // For v2.0, keep it simple: rely on minWeakApps + silenceMinApps guardrails.
 
-  // Day4 — Prioritization + Max exposure
+  // Day9 — Prioritization + overload prevention
   patterns.sort((a, b) => {
     // 1) strong first
     if (a.strength !== b.strength) {
       return a.strength === "strong" ? -1 : 1;
     }
+
     // 2) higher confidence first
     if (a.confidence !== b.confidence) {
       return b.confidence - a.confidence;
     }
+
     // 3) fixed priority: Conversion > Distribution > Target
     return typePriority[b.type] - typePriority[a.type];
   });
 
-  return patterns.slice(0, maxExposed);
+  const strongExists = patterns.some((p) => p.strength === "strong");
+  const exposedLimit = strongExists ? maxExposed : 1;
+
+  return patterns.slice(0, exposedLimit);
 };
 
 // --------------------------
@@ -170,6 +175,7 @@ const checkDistributionConcentration = (
     type: "distribution_concentration",
     strength,
     metrics: {
+      applications: totalApps,
       dominant_ratio: best.ratio,
     },
     meta: {
@@ -208,6 +214,7 @@ const checkTargetNarrowness = (
     type: "target_narrowness",
     strength,
     metrics: {
+      applications: totalApps,
       dominant_keyword_ratio: dom.ratio,
       unique_keyword_count: uniqueCount,
     },
