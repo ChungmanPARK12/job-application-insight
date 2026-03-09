@@ -1,6 +1,5 @@
 // src/lib/insights/__debug_corePatterns.ts
-import { detectCorePatterns } from "./detectCorePatterns";
-import { narrateCorePatterns } from "./narrateCorePatterns";
+import { buildInsightEngineResult } from "./buildInsightEngineResult";
 import type { StatsResult } from "@/lib/stats";
 
 export const runCorePatternDebug = () => {
@@ -253,8 +252,8 @@ export const runCorePatternDebug = () => {
   ];
 
   for (const t of cases) {
-    const patterns = detectCorePatterns(t.mock);
-    const narratives = narrateCorePatterns(patterns);
+   const result = buildInsightEngineResult(t.mock);
+   const { patterns, narratives } = result;
 
     // eslint-disable-next-line no-console
     console.log(`\n==============================`);

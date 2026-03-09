@@ -1,5 +1,4 @@
 // src/lib/insights/narration.types.ts
-
 import type { Pattern } from "./pattern.types";
 
 export type InsightNarrative = {

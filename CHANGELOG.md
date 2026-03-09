@@ -244,6 +244,13 @@ Logic layer (Week 3) untouched.
 - Max 2 insights exposed
 - Overload prevention rule added
 
+## [2026-03-09]
+
+### Day 10 — Final Integration & Refactor
+- Added unified insight engine entry with `buildInsightEngineResult`
+- Kept layer boundaries clear across stats, detection, and narration
+- Verified integrated pattern → narrative flow with debug cases
+
 
 
 

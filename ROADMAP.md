@@ -81,3 +81,44 @@ Day 10 — Final Integration & Refactor
   - Pattern Detection
   - Reflection Engine
 - Architecture stabilized for future expansion
+
+### Week 3 — Productization Layer
+
+Day 11 — Engine Result Contract Expansion
+- Extended `InsightEngineResult` output contract
+- Included:
+  - stats
+  - patterns
+  - narratives
+- Stabilized unified engine entry via `buildInsightEngineResult`
+
+Day 12 — CSV → Insight Pipeline Integration
+- Connected CSV ingestion → stats pipeline → insight engine
+- Established end-to-end flow:
+  - CSV upload
+  - stats generation
+  - pattern detection
+  - narrative generation
+- Verified pipeline output consistency
+
+Day 13 — Insight Panel UI (Next.js)
+- Created initial Insight display components
+- Rendered:
+  - Fact
+  - Boundary
+  - Reflection (conditional)
+- Displayed max 2 insights based on prioritization rules
+
+Day 14 — Insight Metadata & UX Layer
+- Added supporting metadata to insight output:
+  - pattern_type
+  - strength
+  - confidence
+  - stage
+- Enabled UI labels and contextual indicators
+
+Day 15 — Product Integration & UI Flow
+- Built basic product workflow:
+  - CSV upload → Insight analysis → Insight panel
+- Verified stable UI rendering with real dataset
+- Prepared structure for future improvements
