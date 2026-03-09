@@ -252,20 +252,24 @@ export const runCorePatternDebug = () => {
   ];
 
   for (const t of cases) {
-   const result = buildInsightEngineResult(t.mock);
-   const { patterns, narratives } = result;
+    const result = buildInsightEngineResult(t.mock);
+    const { stats, patterns, narratives } = result;
 
     // eslint-disable-next-line no-console
     console.log(`\n==============================`);
-    // eslint-disable-next-line no-console
     console.log(t.name);
-    // eslint-disable-next-line no-console
     console.log(`==============================`);
+
+    // eslint-disable-next-line no-console
+    console.log("stats:");
+    console.log({
+      total: stats.overall.total,
+      interview_rate: stats.overall.interview_rate,
+    });
 
     // eslint-disable-next-line no-console
     console.log("patterns:");
     for (const p of patterns) {
-      // eslint-disable-next-line no-console
       console.log({
         type: p.type,
         strength: p.strength,
@@ -279,7 +283,6 @@ export const runCorePatternDebug = () => {
     // eslint-disable-next-line no-console
     console.log("narratives:");
     for (const n of narratives) {
-      // eslint-disable-next-line no-console
       console.log({
         pattern_type: n.pattern_type,
         strength: n.strength,

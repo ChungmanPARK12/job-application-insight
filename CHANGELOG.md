@@ -251,6 +251,14 @@ Logic layer (Week 3) untouched.
 - Kept layer boundaries clear across stats, detection, and narration
 - Verified integrated pattern → narrative flow with debug cases
 
+## [2026-03-10]
+
+### Day 11 — Engine Result Contract Expansion
+- Extended `InsightEngineResult` to include `stats`
+- Verified unified engine output: stats, patterns, narratives
+- Confirmed integrated debug flow through `buildInsightEngineResult`
+
+
 
 
 
