@@ -3,24 +3,22 @@
 
 import React, { useMemo, useState } from "react";
 import { parseCsvText } from "@/domains/processA/parsers/csv";
-import { runCsvPipeline } from "@/lib/csv/pipeline";
-import type { ApplicationRecord } from "@/types/ApplicationRecord";
+import { runInsightPipeline } from "@/lib/insights/runInsightsPipeline";
 
-// Stats + Insights
-import { buildStatsResult } from "@/lib/stats";
-import { detectPatterns } from "@/lib/insights/detectPatterns";
-import { narrateInsights } from "@/lib/insights/narrateInsights";
-
-import { runCorePatternDebug } from "@/lib/insights/_debug_corePatterns";
-
-runCorePatternDebug();
-
+// ---------- local types ----------
 type LoadState =
   | { status: "idle" }
   | { status: "loading" }
   | { status: "loaded"; fileName: string; text: string }
   | { status: "error"; message: string };
 
+type BreakdownRow = {
+  label: string;
+  count?: number;
+  interviewRate?: number;
+};
+
+// ---------- file reader ----------
 const readFileAsText = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -30,7 +28,7 @@ const readFileAsText = (file: File): Promise<string> => {
   });
 };
 
-// ---------- UI helpers (presentation only) ----------
+// ---------- UI helpers ----------
 const shell: React.CSSProperties = {
   padding: 24,
   maxWidth: 980,
@@ -119,8 +117,6 @@ const pickFirstObject = (...vals: unknown[]) => {
   return null;
 };
 
-type BreakdownRow = { label: string; count?: number; interviewRate?: number };
-
 const BreakdownCard = ({
   title,
   subtitle,
@@ -160,8 +156,12 @@ const BreakdownCard = ({
             return (
               <li key={r.label}>
                 <strong>{r.label}</strong>
-                {typeof r.count === "number" ? <span style={{ opacity: 0.8 }}> — {r.count}</span> : null}
-                {pct ? <span style={{ opacity: 0.8 }}> • interview rate {pct}</span> : null}
+                {typeof r.count === "number" ? (
+                  <span style={{ opacity: 0.8 }}> — {r.count}</span>
+                ) : null}
+                {pct ? (
+                  <span style={{ opacity: 0.8 }}> • interview rate {pct}</span>
+                ) : null}
               </li>
             );
           })}
@@ -198,12 +198,12 @@ export default function Home() {
     }
   };
 
-  // 1) Parse + pipeline (derived, no setState here)
+  // 1) Parse + full insight pipeline
   const pipeline = useMemo(() => {
     if (state.status !== "loaded") return null;
 
     const parsed = parseCsvText(state.text);
-    const result = runCsvPipeline(parsed);
+    const result = runInsightPipeline(parsed);
 
     return {
       fileName: state.fileName,
@@ -214,36 +214,32 @@ export default function Home() {
     };
   }, [state]);
 
-  // 2) Records + pipeline error (derived)
+  // 2) Derived pipeline result slices
   const records = useMemo(() => {
-    if (!pipeline) return null;
-    if (!pipeline.result.ok) return null;
-    return pipeline.result.records as ApplicationRecord[];
+    if (!pipeline?.result.ok) return null;
+    return pipeline.result.records;
   }, [pipeline]);
 
   const pipelineError = useMemo(() => {
     if (!pipeline) return null;
     if (pipeline.result.ok) return null;
-    return pipeline.result.message as string;
+    return pipeline.result.message;
   }, [pipeline]);
 
-  // 🟢 Stats Engine
   const stats = useMemo(() => {
-    if (!records || records.length === 0) return null;
-    return buildStatsResult(records);
-  }, [records]);
+    if (!pipeline?.result.ok) return null;
+    return pipeline.result.stats;
+  }, [pipeline]);
 
-  // 🟢 Rule-based pattern detection
   const patterns = useMemo(() => {
-    if (!stats) return [];
-    return detectPatterns(stats);
-  }, [stats]);
+    if (!pipeline?.result.ok) return [];
+    return pipeline.result.patterns;
+  }, [pipeline]);
 
-  // 🟢 Insight narration
-  const insights = useMemo(() => {
-    if (!patterns || patterns.length === 0) return [];
-    return narrateInsights(patterns);
-  }, [patterns]);
+  const narratives = useMemo(() => {
+    if (!pipeline?.result.ok) return [];
+    return pipeline.result.narratives;
+  }, [pipeline]);
 
   // ----- Presentation extraction (best-effort, guardrail safe) -----
   const overall = useMemo(() => {
@@ -253,22 +249,34 @@ export default function Home() {
     const overallObj = s.overall ?? s.summary ?? s.totals ?? null;
 
     const total =
-      pickFirstNumber(overallObj?.total, overallObj?.applications, overallObj?.totalApplications, s.total) ??
-      (records?.length ?? null);
+      pickFirstNumber(
+        overallObj?.total,
+        overallObj?.applications,
+        overallObj?.totalApplications,
+        s.total
+      ) ?? (records?.length ?? null);
 
     const interviewRate =
-      pickFirstNumber(overallObj?.interviewRate, overallObj?.interview_rate, overallObj?.rate) ?? null;
+      pickFirstNumber(
+        overallObj?.interviewRate,
+        overallObj?.interview_rate,
+        overallObj?.rate
+      ) ?? null;
 
-    // ✅ Your stats output uses by_status
     const statusCounts =
-      pickFirstObject(overallObj?.by_status, overallObj?.statusCounts, overallObj?.status_counts, overallObj?.statuses) ??
+      pickFirstObject(
+        overallObj?.by_status,
+        overallObj?.statusCounts,
+        overallObj?.status_counts,
+        overallObj?.statuses
+      ) ??
       pickFirstObject(s.by_status, s.statusCounts, s.status_counts) ??
       null;
 
     return { total, interviewRate, statusCounts, overallObj };
   }, [stats, records?.length]);
 
-  // ✅ FIX: breakdowns is an ARRAY of { dimension, rows }
+  // breakdowns is an ARRAY of { dimension, rows }
   const breakdowns = useMemo(() => {
     if (!stats) return null;
     const s: any = stats;
@@ -282,7 +290,8 @@ export default function Home() {
       rows.map((r) => ({
         label: String(r?.key ?? "Unknown"),
         count: typeof r?.total === "number" ? r.total : undefined,
-        interviewRate: typeof r?.interview_rate === "number" ? r.interview_rate : undefined,
+        interviewRate:
+          typeof r?.interview_rate === "number" ? r.interview_rate : undefined,
       }));
 
     return {
@@ -300,13 +309,14 @@ export default function Home() {
       <header style={{ marginBottom: 18 }}>
         <h1 style={{ marginBottom: 6 }}>Job Application Insight System</h1>
         <p style={{ margin: 0, opacity: 0.8, lineHeight: 1.5 }}>
-          Presentation Layer (Week 4) — Clear cards for non-technical viewers. No raw debug output by default.
+          Productization Layer (Week 3) — CSV upload, insight pipeline, and
+          presentation cards for non-technical viewers.
         </p>
       </header>
 
       <Card
         title="CSV Upload"
-        subtitle="Upload a .csv file. The system will validate headers, normalize statuses, compute stats, detect patterns, and narrate insights."
+        subtitle="Upload a .csv file. The system will validate headers, normalize statuses, compute stats, detect patterns, and generate prioritized insight narratives."
         right={
           <label
             style={{
@@ -317,7 +327,11 @@ export default function Home() {
               userSelect: "none",
             }}
           >
-            <input type="checkbox" checked={debug} onChange={(e) => setDebug(e.target.checked)} />
+            <input
+              type="checkbox"
+              checked={debug}
+              onChange={(e) => setDebug(e.target.checked)}
+            />
             <span style={{ fontSize: 13, opacity: 0.8 }}>Show debug</span>
           </label>
         }
@@ -326,8 +340,12 @@ export default function Home() {
           <input type="file" accept=".csv,text/csv" onChange={onSelectFile} />
 
           {state.status === "loading" ? <span style={{ opacity: 0.8 }}>Loading…</span> : null}
-          {state.status === "error" ? <span style={{ color: "crimson" }}>Error: {state.message}</span> : null}
-          {pipelineError ? <span style={{ color: "crimson" }}>Pipeline Error: {pipelineError}</span> : null}
+          {state.status === "error" ? (
+            <span style={{ color: "crimson" }}>Error: {state.message}</span>
+          ) : null}
+          {pipelineError ? (
+            <span style={{ color: "crimson" }}>Pipeline Error: {pipelineError}</span>
+          ) : null}
         </div>
 
         {pipeline && pipeline.result.ok ? (
@@ -340,7 +358,9 @@ export default function Home() {
 
         {debug && pipeline ? (
           <div style={{ marginTop: 12 }}>
-            <div style={{ fontSize: 13, opacity: 0.75, marginBottom: 6 }}>Debug (developer-only)</div>
+            <div style={{ fontSize: 13, opacity: 0.75, marginBottom: 6 }}>
+              Debug (developer-only)
+            </div>
             <pre
               style={{
                 background: "#f7f7f7",
@@ -359,7 +379,7 @@ export default function Home() {
                   },
                   stats,
                   patterns,
-                  insights,
+                  narratives,
                 },
                 null,
                 2
@@ -369,7 +389,6 @@ export default function Home() {
         ) : null}
       </Card>
 
-      {/* Main presentation cards */}
       {hasData ? (
         <div style={{ marginTop: 16, display: "grid", gap: 16 }}>
           <Card
@@ -380,7 +399,11 @@ export default function Home() {
               <StatPill label="Applications" value={overall?.total ?? "—"} />
               <StatPill
                 label="Interview rate"
-                value={overall?.interviewRate != null ? formatPct(overall.interviewRate) ?? "—" : "—"}
+                value={
+                  overall?.interviewRate != null
+                    ? formatPct(overall.interviewRate) ?? "—"
+                    : "—"
+                }
               />
             </div>
 
@@ -404,16 +427,61 @@ export default function Home() {
 
           <Card
             title="Key Insights"
-            subtitle="Narrated patterns (guardrails applied). Avoid reading these as deterministic conclusions."
+            subtitle="Prioritized reflection narratives. These are descriptive signals, not deterministic conclusions."
           >
-            {insights.length === 0 ? (
-              <div style={{ opacity: 0.75 }}>No strong patterns detected yet.</div>
+            {narratives.length === 0 ? (
+              <div style={{ opacity: 0.75 }}>No prioritized insights detected yet.</div>
             ) : (
-              <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.7 }}>
-                {insights.map((i: any, idx: number) => (
-                  <li key={idx}>{i.text}</li>
+              <div style={{ display: "grid", gap: 12 }}>
+                {narratives.map((n, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      border: "1px solid #eee",
+                      borderRadius: 12,
+                      padding: 14,
+                      background: "#fff",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        gap: 8,
+                        alignItems: "center",
+                        marginBottom: 10,
+                      }}
+                    >
+                      <span style={{ fontWeight: 700 }}>{n.pattern_type}</span>
+                      <span
+                        style={{
+                          fontSize: 12,
+                          padding: "4px 8px",
+                          borderRadius: 999,
+                          background: "#f5f5f5",
+                          border: "1px solid #eaeaea",
+                        }}
+                      >
+                        {n.strength}
+                      </span>
+                    </div>
+
+                    <div style={{ lineHeight: 1.65 }}>
+                      <div>
+                        <strong>Fact:</strong> {n.fact}
+                      </div>
+                      <div style={{ marginTop: 6 }}>
+                        <strong>Boundary:</strong> {n.boundary}
+                      </div>
+                      {n.reflection ? (
+                        <div style={{ marginTop: 6 }}>
+                          <strong>Reflection:</strong> {n.reflection}
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
                 ))}
-              </ul>
+              </div>
             )}
           </Card>
 
@@ -428,8 +496,16 @@ export default function Home() {
                 gap: 12,
               }}
             >
-              <BreakdownCard title="Job source" subtitle="Top 3 sources" rows={breakdowns?.job_source ?? []} />
-              <BreakdownCard title="Location" subtitle="Top 3 locations" rows={breakdowns?.location ?? []} />
+              <BreakdownCard
+                title="Job source"
+                subtitle="Top 3 sources"
+                rows={breakdowns?.job_source ?? []}
+              />
+              <BreakdownCard
+                title="Location"
+                subtitle="Top 3 locations"
+                rows={breakdowns?.location ?? []}
+              />
               <BreakdownCard title="Month" subtitle="Top 3 months" rows={breakdowns?.month ?? []} />
               <BreakdownCard
                 title="Position keyword"
@@ -450,8 +526,8 @@ export default function Home() {
       <footer style={{ marginTop: 22, opacity: 0.7, fontSize: 13, lineHeight: 1.5 }}>
         <div style={{ fontWeight: 700, marginBottom: 6 }}>Work status</div>
         <ul style={{ margin: 0, paddingLeft: 18 }}>
-          <li>Week 3 logic completed (pipeline → stats → patterns → narration)</li>
-          <li>Week 4 presentation started (cards + debug hidden by default)</li>
+          <li>Week 3 pipeline integrated (CSV → stats → insight engine)</li>
+          <li>Insight narratives connected to the presentation layer</li>
         </ul>
       </footer>
     </main>

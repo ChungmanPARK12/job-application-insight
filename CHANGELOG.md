@@ -258,6 +258,16 @@ Logic layer (Week 3) untouched.
 - Verified unified engine output: stats, patterns, narratives
 - Confirmed integrated debug flow through `buildInsightEngineResult`
 
+### Day 12 — CSV → Insight Pipeline Integration
+- Added `runInsightPipeline` as the unified CSV → Insight orchestration entry
+- Connected CSV parsing, stats generation, and insight engine
+- Returned full pipeline result including records, stats, patterns, and narratives
+
+### Day 12 — Pipeline Interaction Insight
+- Added interaction insight generation to `runInsightPipeline`
+- Connected combined pattern interpretation after core insight detection
+- Verified pipeline structure for future UI rendering
+
 
 
 

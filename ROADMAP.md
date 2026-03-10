@@ -122,3 +122,9 @@ Day 15 — Product Integration & UI Flow
   - CSV upload → Insight analysis → Insight panel
 - Verified stable UI rendering with real dataset
 - Prepared structure for future improvements
+
+Level 1 — Statistics
+Level 2 — Pattern detection
+Level 3 — Insight
+Level 4 — Diagnosis
+Level 5 — Recommendation
