@@ -4,6 +4,7 @@
 import React, { useMemo, useState } from "react";
 import { parseCsvText } from "@/domains/processA/parsers/csv";
 import { runInsightPipeline } from "@/lib/insights/runInsightsPipeline";
+import InsightPanel from "@/components/insights/InsightPanel";
 
 // ---------- local types ----------
 type LoadState =
@@ -78,7 +79,13 @@ const Card = ({
   );
 };
 
-const StatPill = ({ label, value }: { label: string; value: React.ReactNode }) => {
+const StatPill = ({
+  label,
+  value,
+}: {
+  label: string;
+  value: React.ReactNode;
+}) => {
   return (
     <div
       style={{
@@ -143,7 +150,9 @@ const BreakdownCard = ({
       <div style={{ marginBottom: 10 }}>
         <div style={{ fontWeight: 700 }}>{title}</div>
         {subtitle ? (
-          <div style={{ opacity: 0.7, fontSize: 13, marginTop: 4 }}>{subtitle}</div>
+          <div style={{ opacity: 0.7, fontSize: 13, marginTop: 4 }}>
+            {subtitle}
+          </div>
         ) : null}
       </div>
 
@@ -160,7 +169,10 @@ const BreakdownCard = ({
                   <span style={{ opacity: 0.8 }}> — {r.count}</span>
                 ) : null}
                 {pct ? (
-                  <span style={{ opacity: 0.8 }}> • interview rate {pct}</span>
+                  <span style={{ opacity: 0.8 }}>
+                    {" "}
+                    • interview rate {pct}
+                  </span>
                 ) : null}
               </li>
             );
@@ -241,6 +253,11 @@ export default function Home() {
     return pipeline.result.narratives;
   }, [pipeline]);
 
+  const interactions = useMemo(() => {
+    if (!pipeline?.result.ok) return [];
+    return pipeline.result.interactions;
+  }, [pipeline]);
+
   // ----- Presentation extraction (best-effort, guardrail safe) -----
   const overall = useMemo(() => {
     if (!stats) return null;
@@ -284,7 +301,8 @@ export default function Home() {
     if (!Array.isArray(s.breakdowns)) return null;
 
     const findRows = (dimension: string) =>
-      (s.breakdowns.find((b: any) => b?.dimension === dimension)?.rows ?? []) as any[];
+      (s.breakdowns.find((b: any) => b?.dimension === dimension)?.rows ??
+        []) as any[];
 
     const mapRows = (rows: any[]): BreakdownRow[] =>
       rows.map((r) => ({
@@ -336,20 +354,38 @@ export default function Home() {
           </label>
         }
       >
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 12,
+            alignItems: "center",
+          }}
+        >
           <input type="file" accept=".csv,text/csv" onChange={onSelectFile} />
 
-          {state.status === "loading" ? <span style={{ opacity: 0.8 }}>Loading…</span> : null}
+          {state.status === "loading" ? (
+            <span style={{ opacity: 0.8 }}>Loading…</span>
+          ) : null}
           {state.status === "error" ? (
             <span style={{ color: "crimson" }}>Error: {state.message}</span>
           ) : null}
           {pipelineError ? (
-            <span style={{ color: "crimson" }}>Pipeline Error: {pipelineError}</span>
+            <span style={{ color: "crimson" }}>
+              Pipeline Error: {pipelineError}
+            </span>
           ) : null}
         </div>
 
         {pipeline && pipeline.result.ok ? (
-          <div style={{ marginTop: 12, display: "flex", gap: 10, flexWrap: "wrap" }}>
+          <div
+            style={{
+              marginTop: 12,
+              display: "flex",
+              gap: 10,
+              flexWrap: "wrap",
+            }}
+          >
             <StatPill label="File" value={pipeline.fileName} />
             <StatPill label="Rows" value={pipeline.rowCount} />
             <StatPill label="Columns" value={pipeline.headers.length} />
@@ -380,6 +416,7 @@ export default function Home() {
                   stats,
                   patterns,
                   narratives,
+                  interactions,
                 },
                 null,
                 2
@@ -409,7 +446,9 @@ export default function Home() {
 
             {overall?.statusCounts ? (
               <div style={{ marginTop: 12 }}>
-                <div style={{ fontWeight: 700, marginBottom: 8 }}>Status distribution</div>
+                <div style={{ fontWeight: 700, marginBottom: 8 }}>
+                  Status distribution
+                </div>
                 <ul style={{ margin: 0, paddingLeft: 16, lineHeight: 1.6 }}>
                   {Object.entries(overall.statusCounts).map(([k, v]) => (
                     <li key={k}>
@@ -429,60 +468,28 @@ export default function Home() {
             title="Key Insights"
             subtitle="Prioritized reflection narratives. These are descriptive signals, not deterministic conclusions."
           >
-            {narratives.length === 0 ? (
-              <div style={{ opacity: 0.75 }}>No prioritized insights detected yet.</div>
-            ) : (
-              <div style={{ display: "grid", gap: 12 }}>
-                {narratives.map((n, idx) => (
+            <InsightPanel narratives={narratives} maxItems={2} />
+
+            {interactions.length > 0 ? (
+              <div style={{ marginTop: 14, display: "grid", gap: 12 }}>
+                {interactions.map((item, idx) => (
                   <div
-                    key={idx}
+                    key={`interaction-${idx}`}
                     style={{
                       border: "1px solid #eee",
                       borderRadius: 12,
                       padding: 14,
-                      background: "#fff",
+                      background: "#fafafa",
                     }}
                   >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        gap: 8,
-                        alignItems: "center",
-                        marginBottom: 10,
-                      }}
-                    >
-                      <span style={{ fontWeight: 700 }}>{n.pattern_type}</span>
-                      <span
-                        style={{
-                          fontSize: 12,
-                          padding: "4px 8px",
-                          borderRadius: 999,
-                          background: "#f5f5f5",
-                          border: "1px solid #eaeaea",
-                        }}
-                      >
-                        {n.strength}
-                      </span>
+                    <div style={{ fontWeight: 700, marginBottom: 6 }}>
+                      {item.title}
                     </div>
-
-                    <div style={{ lineHeight: 1.65 }}>
-                      <div>
-                        <strong>Fact:</strong> {n.fact}
-                      </div>
-                      <div style={{ marginTop: 6 }}>
-                        <strong>Boundary:</strong> {n.boundary}
-                      </div>
-                      {n.reflection ? (
-                        <div style={{ marginTop: 6 }}>
-                          <strong>Reflection:</strong> {n.reflection}
-                        </div>
-                      ) : null}
-                    </div>
+                    <div style={{ lineHeight: 1.65 }}>{item.text}</div>
                   </div>
                 ))}
               </div>
-            )}
+            ) : null}
           </Card>
 
           <Card
@@ -506,7 +513,11 @@ export default function Home() {
                 subtitle="Top 3 locations"
                 rows={breakdowns?.location ?? []}
               />
-              <BreakdownCard title="Month" subtitle="Top 3 months" rows={breakdowns?.month ?? []} />
+              <BreakdownCard
+                title="Month"
+                subtitle="Top 3 months"
+                rows={breakdowns?.month ?? []}
+              />
               <BreakdownCard
                 title="Position keyword"
                 subtitle="Top 3 keywords"
@@ -516,14 +527,17 @@ export default function Home() {
 
             {!breakdowns ? (
               <div style={{ marginTop: 12, opacity: 0.75, fontSize: 13 }}>
-                Breakdown blocks are not available in the current stats output shape.
+                Breakdown blocks are not available in the current stats output
+                shape.
               </div>
             ) : null}
           </Card>
         </div>
       ) : null}
 
-      <footer style={{ marginTop: 22, opacity: 0.7, fontSize: 13, lineHeight: 1.5 }}>
+      <footer
+        style={{ marginTop: 22, opacity: 0.7, fontSize: 13, lineHeight: 1.5 }}
+      >
         <div style={{ fontWeight: 700, marginBottom: 6 }}>Work status</div>
         <ul style={{ margin: 0, paddingLeft: 18 }}>
           <li>Week 3 pipeline integrated (CSV → stats → insight engine)</li>

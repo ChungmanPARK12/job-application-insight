@@ -268,6 +268,12 @@ Logic layer (Week 3) untouched.
 - Connected combined pattern interpretation after core insight detection
 - Verified pipeline structure for future UI rendering
 
+## [2026-03-12]
+
+### Day 13 — Insight Panel UI
+
+- Refactored insight presentation into reusable components (`InsightPanel`, `InsightCard`) and connected them to the pipeline output while maintaining the prioritized narrative structure.
+
 
 
 
