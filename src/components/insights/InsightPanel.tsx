@@ -1,23 +1,19 @@
 // src/components/insights/InsightPanel.tsx
-
+import type { InsightNarrative } from "@/lib/insights/narration.types";
 import InsightCard from "./InsightCard";
 
-type NarrativeItem = {
-  pattern_type: string;
-  strength: string;
-  fact: string;
-  boundary: string;
-  reflection?: string;
-};
-
 type Props = {
-  narratives: NarrativeItem[];
+  narratives: InsightNarrative[];
   maxItems?: number;
 };
 
 const InsightPanel = ({ narratives, maxItems = 2 }: Props) => {
   if (!narratives.length) {
-    return <div style={{ opacity: 0.75 }}>No prioritized insights detected yet.</div>;
+    return (
+      <div style={{ opacity: 0.75 }}>
+        No prioritized insights detected yet.
+      </div>
+    );
   }
 
   const displayItems = narratives.slice(0, maxItems);
@@ -25,7 +21,10 @@ const InsightPanel = ({ narratives, maxItems = 2 }: Props) => {
   return (
     <div style={{ display: "grid", gap: 12 }}>
       {displayItems.map((item, idx) => (
-        <InsightCard key={`${item.pattern_type}-${idx}`} item={item} />
+        <InsightCard
+          key={`${item.pattern_type}-${item.stage}-${idx}`}
+          item={item}
+        />
       ))}
     </div>
   );

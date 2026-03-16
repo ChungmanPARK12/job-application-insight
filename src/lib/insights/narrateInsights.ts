@@ -2,13 +2,36 @@
 
 import type { PatternFinding } from "./detectPatterns";
 
+export type InsightStage =
+  | "statistics"
+  | "pattern"
+  | "insight"
+  | "diagnosis"
+  | "recommendation";
+
+export type InsightConfidence = "low" | "medium" | "high";
+export type InsightStrength = "weak" | "moderate" | "strong";
+
 export type InsightSentence = {
   dimension: string;
   key: string;
   text: string;
+
+  // Day 14 metadata
+  pattern_type: string;
+  strength: InsightStrength;
+  confidence: InsightConfidence;
+  stage: InsightStage;
 };
 
 const toPercent = (n: number) => `${(n * 100).toFixed(1)}%`;
+
+// strength → confidence rule
+const getConfidence = (strength: InsightStrength): InsightConfidence => {
+  if (strength === "strong") return "high";
+  if (strength === "moderate") return "medium";
+  return "low";
+};
 
 export const narrateInsights = (
   findings: PatternFinding[]
@@ -30,10 +53,19 @@ export const narrateInsights = (
       f.group_rate
     )} vs ${toPercent(f.overall_rate)}).${sampleNote}`;
 
+    const strength: InsightStrength =
+      f.group_total >= 20 ? "strong" : f.group_total >= 10 ? "moderate" : "weak";
+
     return {
       dimension: f.dimension,
       key: f.key,
       text,
+
+      // Day 14 metadata
+      pattern_type: f.dimension,
+      strength,
+      confidence: getConfidence(strength),
+      stage: "insight",
     };
   });
 };

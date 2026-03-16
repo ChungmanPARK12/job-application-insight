@@ -274,6 +274,21 @@ Logic layer (Week 3) untouched.
 
 - Refactored insight presentation into reusable components (`InsightPanel`, `InsightCard`) and connected them to the pipeline output while maintaining the prioritized narrative structure.
 
+## [2026-03-12]
+
+### Day 14 — Insight Metadata & UX Layer
+
+- Added metadata fields to insight narratives:
+  - `confidence`
+  - `stage`
+- Converted pattern confidence score → UI confidence label (low / medium / high)
+- Extended `InsightNarrative` contract to include metadata
+- Updated `narrateCorePatterns` to attach metadata during narrative generation
+- Enhanced Insight UI:
+  - Displayed `strength`, `confidence`, and `stage` badges in Insight cards
+- Verified metadata propagation through the full pipeline:
+  - pattern detection → narrative generation → UI rendering
+
 
 
 
