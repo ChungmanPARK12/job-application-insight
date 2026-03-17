@@ -274,7 +274,7 @@ Logic layer (Week 3) untouched.
 
 - Refactored insight presentation into reusable components (`InsightPanel`, `InsightCard`) and connected them to the pipeline output while maintaining the prioritized narrative structure.
 
-## [2026-03-12]
+## [2026-03-17] - [2026-03-21]
 
 ### Day 14 — Insight Metadata & UX Layer
 
@@ -288,6 +288,17 @@ Logic layer (Week 3) untouched.
   - Displayed `strength`, `confidence`, and `stage` badges in Insight cards
 - Verified metadata propagation through the full pipeline:
   - pattern detection → narrative generation → UI rendering
+
+### Day 15 — Product Integration & UI Flow
+- Built a basic product workflow:
+  - CSV upload
+  - file-ready state
+  - insight analysis trigger
+  - insight panel rendering
+- Added explicit analysis action (`Run Insight Analysis`)
+- Introduced analyzed-state flow for cleaner product behavior
+- Verified stable UI rendering with real dataset
+- Prepared structure for future improvements
 
 
 

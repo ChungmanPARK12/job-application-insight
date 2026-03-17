@@ -1,7 +1,7 @@
 // src/app/page.tsx
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { parseCsvText } from "@/domains/processA/parsers/csv";
 import { runInsightPipeline } from "@/lib/insights/runInsightsPipeline";
 import InsightPanel from "@/components/insights/InsightPanel";
@@ -11,6 +11,8 @@ type LoadState =
   | { status: "idle" }
   | { status: "loading" }
   | { status: "loaded"; fileName: string; text: string }
+  | { status: "analyzing"; fileName: string; text: string }
+  | { status: "analyzed"; fileName: string; text: string }
   | { status: "error"; message: string };
 
 type BreakdownRow = {
@@ -102,6 +104,26 @@ const StatPill = ({
       <strong style={{ fontSize: 13 }}>{value}</strong>
     </div>
   );
+};
+
+const actionButtonStyle: React.CSSProperties = {
+  padding: "10px 14px",
+  borderRadius: 10,
+  border: "1px solid #dcdcdc",
+  background: "#111",
+  color: "#fff",
+  cursor: "pointer",
+  fontWeight: 600,
+};
+
+const secondaryButtonStyle: React.CSSProperties = {
+  padding: "10px 14px",
+  borderRadius: 10,
+  border: "1px solid #dcdcdc",
+  background: "#fff",
+  color: "#111",
+  cursor: "pointer",
+  fontWeight: 600,
 };
 
 const formatPct = (v: unknown) => {
@@ -210,9 +232,19 @@ export default function Home() {
     }
   };
 
+  const onRunAnalysis = () => {
+    if (state.status !== "loaded" && state.status !== "analyzed") return;
+
+    setState({
+      status: "analyzing",
+      fileName: state.fileName,
+      text: state.text,
+    });
+  };
+
   // 1) Parse + full insight pipeline
   const pipeline = useMemo(() => {
-    if (state.status !== "loaded") return null;
+    if (state.status !== "analyzing" && state.status !== "analyzed") return null;
 
     const parsed = parseCsvText(state.text);
     const result = runInsightPipeline(parsed);
@@ -225,6 +257,18 @@ export default function Home() {
       result,
     };
   }, [state]);
+
+  // Move analyzing -> analyzed after pipeline is available
+  useEffect(() => {
+    if (state.status !== "analyzing") return;
+    if (!pipeline) return;
+
+    setState({
+      status: "analyzed",
+      fileName: state.fileName,
+      text: state.text,
+    });
+  }, [state, pipeline]);
 
   // 2) Derived pipeline result slices
   const records = useMemo(() => {
@@ -320,7 +364,11 @@ export default function Home() {
     };
   }, [stats]);
 
-  const hasData = state.status === "loaded" && (pipeline?.rowCount ?? 0) > 0;
+  const hasData =
+    state.status === "analyzed" &&
+    !!pipeline &&
+    pipeline.result.ok &&
+    pipeline.rowCount > 0;
 
   return (
     <main style={shell}>
@@ -367,9 +415,11 @@ export default function Home() {
           {state.status === "loading" ? (
             <span style={{ opacity: 0.8 }}>Loading…</span>
           ) : null}
+
           {state.status === "error" ? (
             <span style={{ color: "crimson" }}>Error: {state.message}</span>
           ) : null}
+
           {pipelineError ? (
             <span style={{ color: "crimson" }}>
               Pipeline Error: {pipelineError}
@@ -377,18 +427,43 @@ export default function Home() {
           ) : null}
         </div>
 
-        {pipeline && pipeline.result.ok ? (
+        {state.status === "loaded" ||
+        state.status === "analyzing" ||
+        state.status === "analyzed" ? (
           <div
             style={{
               marginTop: 12,
               display: "flex",
               gap: 10,
               flexWrap: "wrap",
+              alignItems: "center",
             }}
           >
-            <StatPill label="File" value={pipeline.fileName} />
-            <StatPill label="Rows" value={pipeline.rowCount} />
-            <StatPill label="Columns" value={pipeline.headers.length} />
+            <StatPill label="File" value={state.fileName} />
+            <StatPill label="Size" value={`${state.text.length} chars`} />
+
+            {pipeline ? (
+              <>
+                <StatPill label="Rows" value={pipeline.rowCount} />
+                <StatPill label="Columns" value={pipeline.headers.length} />
+              </>
+            ) : null}
+
+            {state.status === "loaded" ? (
+              <button onClick={onRunAnalysis} style={actionButtonStyle}>
+                Run Insight Analysis
+              </button>
+            ) : null}
+
+            {state.status === "analyzing" ? (
+              <span style={{ opacity: 0.8 }}>Analyzing…</span>
+            ) : null}
+
+            {state.status === "analyzed" ? (
+              <button onClick={onRunAnalysis} style={secondaryButtonStyle}>
+                Run Again
+              </button>
+            ) : null}
           </div>
         ) : null}
 
