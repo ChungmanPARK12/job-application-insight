@@ -300,6 +300,32 @@ Logic layer (Week 3) untouched.
 - Verified stable UI rendering with real dataset
 - Prepared structure for future improvements
 
+## [2026-03-23]  
+
+### Day 16: Insight Scoring System
+
+- Added `InsightScore` type to support pattern-level scoring
+- Extended `Pattern` with optional `score` field
+- Created `calculateInsightScore()` scoring module
+- Introduced scoring dimensions:
+  - impact
+  - urgency
+  - consistency
+  - confidence
+  - finalScore
+- Connected scoring step into insight engine flow
+- Updated engine pipeline:
+  - detect patterns
+  - attach scores
+  - generate narratives
+- Verified scoring output through debug run
+- Confirmed pattern-level score comparison is now available for future ranking
+
+### Stats logic
+- detectCorePatterns(Finding patterns)
+- calculateInsightScore(calculation priority)
+- narrateCorePatterns(Explain)
+- buildInsightEngineResult(Result)
 
 
 

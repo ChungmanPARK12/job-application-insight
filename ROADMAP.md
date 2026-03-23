@@ -128,3 +128,47 @@ Level 2 — Pattern detection
 Level 3 — Insight
 Level 4 — Diagnosis
 Level 5 — Recommendation
+
+### Week 4 — Decision Layer
+
+Day 16 — Insight Scoring System
+- Introduced scoring dimensions:
+  - impact
+  - urgency
+  - consistency
+  - confidence (existing)
+- Designed weighted scoring formula:
+  - finalScore = weighted sum
+- Enabled quantitative evaluation of patterns
+
+Day 17 — Insight Ranking System
+- Implemented sorting based on finalScore
+- Maintained max 2 insight exposure rule
+- Improved prioritization accuracy
+- Reduced low-value insight noise
+
+Day 18 — Action Generator
+- Designed `InsightAction` schema:
+  - title
+  - description
+  - priority
+- Implemented pattern → action mapping logic
+- Enabled actionable recommendations per insight
+
+Day 19 — Trend Analysis Layer
+- Introduced time-based comparison:
+  - recent vs previous window
+- Added:
+  - trend direction (up / down / flat)
+  - delta value
+- Enabled change detection in performance metrics
+
+Day 20 — Insight Card v2 (UI Upgrade)
+- Redesigned Insight UI structure:
+  - Pattern badge
+  - Narrative (Fact / Boundary / Reflection)
+  - Trend indicator
+  - Action list
+  - Confidence / Score display
+- Improved readability and decision clarity
+- Integrated metadata-driven UI rendering

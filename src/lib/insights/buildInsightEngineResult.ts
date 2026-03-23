@@ -1,6 +1,8 @@
+// src/lib/insights/buildInsightsEngineResult.ts
 import type { StatsResult } from "@/lib/stats";
 import { detectCorePatterns } from "./detectCorePatterns";
 import { narrateCorePatterns } from "./narrateCorePatterns";
+import { calculateInsightScore } from "./scoring/calculateInsightScore";
 import type { Pattern } from "./pattern.types";
 import type { InsightNarrative } from "./narration.types";
 
@@ -14,11 +16,17 @@ export const buildInsightEngineResult = (
   stats: StatsResult
 ): InsightEngineResult => {
   const patterns = detectCorePatterns(stats);
-  const narratives = narrateCorePatterns(patterns);
+
+  const scoredPatterns = patterns.map((pattern) => ({
+    ...pattern,
+    score: calculateInsightScore(pattern),
+  }));
+
+  const narratives = narrateCorePatterns(scoredPatterns);
 
   return {
     stats,
-    patterns,
+    patterns: scoredPatterns,
     narratives,
   };
 };

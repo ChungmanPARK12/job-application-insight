@@ -14,9 +14,7 @@ export type InsightPipelineSuccess = {
     stats: InsightEngineResult["stats"];
     patterns: InsightEngineResult["patterns"];
     narratives: InsightEngineResult["narratives"];
-
     interactions: ReturnType<typeof buildInteractionInsights>;
-
     csvMeta: {
         totalRows: number;
         mappedFields: Record<string, number | null>;
