@@ -4,30 +4,37 @@ import type { InsightCard as InsightCardItem } from "@/lib/insights/types/insigh
 
 type Props = {
   item: InsightCardItem;
+  isPrimary?: boolean;
 };
 
-const cardStyle: CSSProperties = {
-  border: "1px solid #eee",
-  borderRadius: 12,
-  padding: 14,
-  background: "#fff",
-};
+const cardStyle = (isPrimary: boolean): CSSProperties => ({
+  border: isPrimary ? "1px solid #d6c38a" : "1px solid #eee",
+  borderRadius: 14,
+  padding: 16,
+  background: isPrimary ? "#fffaf0" : "#fff",
+  boxShadow: isPrimary ? "0 2px 10px rgba(0,0,0,0.04)" : "none",
+});
 
 const metaRowStyle: CSSProperties = {
   display: "flex",
   flexWrap: "wrap",
   gap: 8,
   alignItems: "center",
-  marginBottom: 10,
+  marginBottom: 12,
 };
 
-const badgeStyle: CSSProperties = {
+const badgeStyle = (variant: "default" | "primary" | "trend"): CSSProperties => ({
   fontSize: 12,
   padding: "4px 8px",
   borderRadius: 999,
-  background: "#f5f5f5",
   border: "1px solid #eaeaea",
-};
+  background:
+    variant === "primary"
+      ? "#fff3cd"
+      : variant === "trend"
+      ? "#f3f7ff"
+      : "#f5f5f5",
+});
 
 const sectionLabelStyle: CSSProperties = {
   fontSize: 12,
@@ -38,29 +45,89 @@ const sectionLabelStyle: CSSProperties = {
   marginBottom: 4,
 };
 
-const listStyle: CSSProperties = {
-  margin: "6px 0 0 18px",
-  padding: 0,
-  lineHeight: 1.6,
+const actionBlockStyle: CSSProperties = {
+  border: "1px solid #eee",
+  borderRadius: 10,
+  padding: 10,
+  background: "#fafafa",
+};
+
+const actionMetaRowStyle: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+  marginBottom: 4,
+};
+
+const priorityBadgeStyle = (priority: string): CSSProperties => ({
+  fontSize: 11,
+  padding: "2px 8px",
+  borderRadius: 999,
+  border: "1px solid #e5e5e5",
+  background:
+    priority === "high"
+      ? "#fff1f1"
+      : priority === "medium"
+      ? "#fff8e8"
+      : "#f5f5f5",
+  textTransform: "capitalize",
+});
+
+const formatPatternLabel = (value: string) => {
+  return value
+    .split("_")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
 };
 
 const getScoreLabel = (score: InsightCardItem["score"]) => {
   return `score ${score.finalScore.toFixed(2)} / confidence ${score.confidence.toFixed(2)}`;
 };
 
-const getTrendLabel = (trend?: InsightCardItem["trend"]) => {
-  if (!trend) return null;
-  return `${trend.direction} ${trend.delta}`;
+const formatDelta = (delta: number) => {
+  const abs = Math.abs(delta);
+  if (abs <= 1) return `${(abs * 100).toFixed(1)}%`;
+  return abs.toFixed(1);
 };
 
-const InsightCard = ({ item }: Props) => {
+const getTrendLabel = (trend?: InsightCardItem["trend"]) => {
+  if (!trend) return null;
+
+  const symbol =
+    trend.direction === "up"
+      ? "↑"
+      : trend.direction === "down"
+      ? "↓"
+      : "→";
+
+  return `${symbol} ${trend.direction} ${formatDelta(trend.delta)}`;
+};
+
+const getPrimaryLabel = (isPrimary: boolean) => {
+  return isPrimary ? "Top insight" : null;
+};
+
+const InsightCard = ({ item, isPrimary = false }: Props) => {
+  const trendLabel = getTrendLabel(item.trend);
+  const primaryLabel = getPrimaryLabel(isPrimary);
+
   return (
-    <div style={cardStyle}>
+    <div style={cardStyle(isPrimary)}>
       <div style={metaRowStyle}>
-        <span style={{ fontWeight: 700 }}>{item.meta.patternType}</span>
-        <span style={badgeStyle}>{item.meta.strength}</span>
-        <span style={badgeStyle}>{getScoreLabel(item.score)}</span>
-        {item.trend ? <span style={badgeStyle}>{getTrendLabel(item.trend)}</span> : null}
+        <span style={{ fontWeight: 700 }}>
+          {formatPatternLabel(item.meta.patternType)}
+        </span>
+
+        <span style={badgeStyle("default")}>{item.meta.strength}</span>
+        <span style={badgeStyle("default")}>{getScoreLabel(item.score)}</span>
+
+        {primaryLabel ? (
+          <span style={badgeStyle("primary")}>{primaryLabel}</span>
+        ) : null}
+
+        {trendLabel ? (
+          <span style={badgeStyle("trend")}>{trendLabel}</span>
+        ) : null}
       </div>
 
       <div style={{ lineHeight: 1.65 }}>
@@ -82,15 +149,28 @@ const InsightCard = ({ item }: Props) => {
         ) : null}
 
         {item.actions.length > 0 ? (
-          <div style={{ marginTop: 10 }}>
-            <span style={sectionLabelStyle}>Actions</span>
-            <ul style={listStyle}>
+          <div style={{ marginTop: 12 }}>
+            <span style={sectionLabelStyle}>Next steps</span>
+
+            <div style={{ display: "grid", gap: 8, marginTop: 4 }}>
               {item.actions.map((action, index) => (
-                <li key={`${action.title}-${index}`}>
-                  {action.title} ({action.priority})
-                </li>
+                <div
+                  key={`${action.title}-${index}`}
+                  style={actionBlockStyle}
+                >
+                  <div style={actionMetaRowStyle}>
+                    <strong>{action.title}</strong>
+                    <span style={priorityBadgeStyle(action.priority)}>
+                      {action.priority}
+                    </span>
+                  </div>
+
+                  {action.description ? (
+                    <div style={{ opacity: 0.8 }}>{action.description}</div>
+                  ) : null}
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         ) : null}
       </div>

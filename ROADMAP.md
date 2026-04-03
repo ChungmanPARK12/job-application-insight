@@ -172,3 +172,107 @@ Day 20 — Insight Card v2 (UI Upgrade)
   - Confidence / Score display
 - Improved readability and decision clarity
 - Integrated metadata-driven UI rendering
+
+## WORK MODE — Week 5 Planning (Decision Product Layer)
+
+### Objective
+Transform the system from:
+- Insight generation (analysis)
+→ to
+- Decision support (actionable guidance)
+
+Goal:
+Eliminate interpretation burden and guide user actions directly.
+
+---
+
+## Week 5 — Decision Product Layer
+
+### Day 21 — Decision Sentence Layer
+**Goal**
+- Convert insights into clear decision statements
+
+**Key Changes**
+- Introduce `Decision` schema
+- Map pattern → decision message
+- Shift tone:
+  - descriptive → directive
+
+---
+
+### Day 22 — Primary Decision System
+**Goal**
+- Expose only one primary decision
+
+**Key Changes**
+- Select top 1 insight (highest score)
+- Introduce:
+  - `primaryDecision`
+  - `supportingSignals`
+- Reduce cognitive load
+
+---
+
+### Day 23 — Decision Confidence Layer
+**Goal**
+- Make decision reliability explicit
+
+**Key Changes**
+- Convert confidence → user-facing label
+  - High / Medium / Low
+- Add reasoning:
+  - sample size
+  - signal stability
+
+---
+
+### Day 24 — Action → Execution Plan
+**Goal**
+- Transform actions into step-by-step plans
+
+**Key Changes**
+- Replace loose actions with structured steps
+- Add execution sequence logic
+
+---
+
+### Day 25 — Outcome Projection
+**Goal**
+- Show expected impact of decisions
+
+**Key Changes**
+- Introduce:
+  - expected improvement
+  - directional outcome
+
+---
+
+### Day 26 — Decision UI v1
+**Goal**
+- Replace Insight Card → Decision Panel
+
+**Structure**
+- Primary Decision
+- Why this matters
+- What to do
+- Expected outcome
+- Confidence
+
+---
+
+## Structural Shift
+
+### Week 4 (Completed)
+Pattern → Score → Narrative → Card
+
+### Week 5 (New)
+Pattern → Decision → Plan → Outcome
+
+---
+
+## Design Philosophy Change
+
+- Inform → Guide
+- Describe → Decide
+- Multiple signals → Single focus
+- User interprets → System recommends

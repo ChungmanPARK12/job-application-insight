@@ -368,11 +368,25 @@ Logic layer (Week 3) untouched.
 
 ### Day 19 — Trend Analysis Layer(Judgement getting better or not?)
 
-- Created trend types (TrendMetric, TrendAnalysisResult)
-- Implemented calculateTrendMetric (delta, direction logic with threshold)
-- Built buildTrendAnalysis for overall metrics (total, interview_rate)
-- Handled nullable stats values using fallback (?? 0)
-- Added debug output to verify trend calculations
+### Completed — Week 4 (Decision Layer)
+- Implemented insight scoring system (impact, urgency, consistency, confidence)
+- Built ranking system with prioritized top insights
+- Added action generator with structured schema
+- Implemented trend analysis (delta, direction)
+- Upgraded Insight Card UI (Fact / Boundary / Reflection / Actions / Score)
+
+### Planning — Week 5 (Decision Product Layer)
+- Defined transition from insight system → decision system
+- Designed Decision Sentence layer
+- Introduced Primary Decision concept (single focus)
+- Planned Decision Confidence model
+- Defined Execution Plan structure
+- Added Outcome Projection concept
+- Designed Decision Panel UI structure
+
+### Direction Shift
+- From analysis-driven insights → decision-driven product
+- From descriptive output → actionable guidance
 
 
 
