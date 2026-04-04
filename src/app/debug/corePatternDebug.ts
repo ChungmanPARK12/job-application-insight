@@ -115,6 +115,16 @@ export const runCorePatternDebug = (): void => {
     }))
   );
 
+    console.log(
+    "DECISIONS:",
+    result.decisions.map((d) => ({
+      patternType: d.patternType,
+      decision: d.decision,
+      score: d.score,
+      confidence: d.confidence,
+    }))
+  );
+
   console.log("NARRATIVES:", result.narratives);
 
   console.log(
@@ -150,6 +160,7 @@ export const runCorePatternDebug = (): void => {
 
   console.log("=== Insight Engine Debug Summary ===");
   console.log("patterns:", result.patterns.length);
+  console.log("decisions:", result.decisions.length);
   console.log("narratives:", result.narratives.length);
   console.log("actions:", result.actions.length);
   console.log("cards:", cards.length);

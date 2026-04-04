@@ -388,6 +388,25 @@ Logic layer (Week 3) untouched.
 - From analysis-driven insights → decision-driven product
 - From descriptive output → actionable guidance
 
+## [2026-04-04] - [2026-04-05] Week 5 
+
+### Added
+- Introduced Decision schema (`decision.types.ts`)
+- Implemented pattern → decision mapping (`generateDecision.ts`)
+- Added decision layer to insight pipeline
+
+### Changed
+- Extended `buildInsightEngineResult` to include `decisions`
+
+### Verified
+- Decision generation from exposed patterns
+- Directive-style decision sentences
+- Score and confidence propagation intact
+- No impact on narratives, actions, or cards
+
+### Notes
+- Structural shift started: descriptive insight → directive decision
+
 
 
 
