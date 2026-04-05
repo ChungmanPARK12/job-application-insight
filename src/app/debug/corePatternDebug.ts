@@ -102,7 +102,7 @@ export const runCorePatternDebug = (): void => {
       rank: p.rank,
       decision: p.exposureDecision,
       shouldExpose: p.shouldExpose,
-    }))
+    })),
   );
 
   console.log(
@@ -112,17 +112,29 @@ export const runCorePatternDebug = (): void => {
       finalScore: p.score?.finalScore,
       confidence: p.score?.confidence,
       rank: p.rank,
-    }))
+    })),
   );
 
-    console.log(
-    "DECISIONS:",
-    result.decisions.map((d) => ({
-      patternType: d.patternType,
-      decision: d.decision,
-      score: d.score,
-      confidence: d.confidence,
-    }))
+  console.log(
+    "PRIMARY DECISION:",
+    result.primaryDecision
+      ? {
+          patternType: result.primaryDecision.patternType,
+          decision: result.primaryDecision.decision,
+          score: result.primaryDecision.score,
+          confidence: result.primaryDecision.confidence,
+        }
+      : null,
+  );
+
+  console.log(
+    "SUPPORTING SIGNALS:",
+    result.supportingSignals.map((p) => ({
+      type: p.type,
+      finalScore: p.score?.finalScore,
+      confidence: p.score?.confidence,
+      rank: p.rank,
+    })),
   );
 
   console.log("NARRATIVES:", result.narratives);
@@ -132,7 +144,7 @@ export const runCorePatternDebug = (): void => {
     result.actions.map((a) => ({
       title: a.title,
       priority: a.priority,
-    }))
+    })),
   );
 
   const cards = buildInsightCards({
@@ -142,25 +154,26 @@ export const runCorePatternDebug = (): void => {
   });
 
   console.log(
-  "INSIGHT CARDS:",
-  cards.map((card) => ({
-    patternType: card.meta.patternType,
-    strength: card.meta.strength,
-    fact: card.narrative.fact,
-    boundary: card.narrative.boundary,
-    reflection: card.narrative.reflection,
-    actions: card.actions.map((a) => ({
-      title: a.title,
-      priority: a.priority,
+    "INSIGHT CARDS:",
+    cards.map((card) => ({
+      patternType: card.meta.patternType,
+      strength: card.meta.strength,
+      fact: card.narrative.fact,
+      boundary: card.narrative.boundary,
+      reflection: card.narrative.reflection,
+      actions: card.actions.map((a) => ({
+        title: a.title,
+        priority: a.priority,
+      })),
+      score: card.score,
+      trend: card.trend ?? null,
     })),
-    score: card.score,
-    trend: card.trend ?? null,
-  }))
-);
+  );
 
   console.log("=== Insight Engine Debug Summary ===");
   console.log("patterns:", result.patterns.length);
-  console.log("decisions:", result.decisions.length);
+  console.log("hasPrimaryDecision:", result.primaryDecision !== null);
+  console.log("supportingSignals:", result.supportingSignals.length);
   console.log("narratives:", result.narratives.length);
   console.log("actions:", result.actions.length);
   console.log("cards:", cards.length);

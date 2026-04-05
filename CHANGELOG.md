@@ -3,12 +3,14 @@
 ## [2026-02-05] — Project Initialization
 
 ### Create Project
+
 - Initialized Next.js project with TypeScript
 - Command used:
   - `npx create-next-app@latest job-application-insight --typescript`
 - Verified local development server (`npm run dev`)
 
 ### Tooling & Configuration
+
 - ESLint configured (Next.js default)
 - TypeScript + React standard linting
 - Codebase structured under `src/` directory
@@ -17,6 +19,7 @@
 ## [2026-02-12] — Week 2 Day 1
 
 ### CSV Upload (Preview Stage)
+
 - Implemented CSV file upload in UI
 - Read file content using FileReader
 - Displayed file metadata (chars, lines, rows)
@@ -25,6 +28,7 @@
 ## [2026-02-13] — Week 2: Data Stabilization Layer
 
 ### Added
+
 - Header, internal field mapping (`HEADER_ALIASES`)
 - Status normalization (3 states only):
   - No response
@@ -36,11 +40,13 @@
   - parse → mapping → validation → normalization → records
 
 ### Updated
+
 - Integrated pipeline into `page.tsx`
 - Added `records` and `pipelineError` state
 - Added ApplicationRecord preview block
 
 Next:
+
 - Basic statistics calculation (interview conversion metrics)
 
 ## [2026-02-16]
@@ -88,6 +94,7 @@ Next:
 - Connected `StatsResult` rendering in `src/app/page.tsx` for debugging
 
 ### Next Plan
+
 - Rule-based pattern detection
 
 ## [2026-02-17]
@@ -114,11 +121,12 @@ Next:
   CSV → Structured Data → Stats → Breakdown → Pattern → Narrative Insight
 
 - Week 3 Goal Achieved:
- - “Results can be explained in natural language.”
+- “Results can be explained in natural language.”
 
 ## Week 4 — Presentation
 
 ### Goal
+
 “Insights are understandable to others.”
 
 ### Planned Scope
@@ -162,6 +170,7 @@ Logic layer (Week 3) untouched.
 ## [2026-02-26]
 
 ### Day 2 — Pattern Object Structure
+
 - Designed pattern return object structure
 - Standardized fields: type, strength, metrics, confidence
 - Preparing Day 3 Working, detailed in insight-engine-v2.md
@@ -171,6 +180,7 @@ Logic layer (Week 3) untouched.
 ### Day 3 — Pattern Detection Engine (Core v2)
 
 ### Insights
+
 - Introduced `Pattern` type contract for Insight Engine v2
 - Added new core pattern detector: `detectCorePatterns.ts`
 - Implemented 3 statistical core patterns:
@@ -181,6 +191,7 @@ Logic layer (Week 3) untouched.
 - Preserved existing Week3 stats and delta-based pattern detection (no breaking changes)
 
 ### Debugging & Validation
+
 - Build verification: `npm run build` completed successfully (no TypeScript errors)
 - Runtime validation: `detectCorePatterns` executed against real stats output
 - Confirmed 3 strong patterns detected under test dataset:
@@ -193,6 +204,7 @@ Logic layer (Week 3) untouched.
   - Meta fields (dominant_dimension, dominant_category, dominant_keyword) populated correctly
 
 ### Next Step
+
 - Max 2 exposure + Strong priority array
 - Silence mode and Narrations connect, Fact -> Boundary -> reflection
 
@@ -201,10 +213,12 @@ Logic layer (Week 3) untouched.
 ### Day 4 — Statistical Guardrails
 
 ### Insights
+
 - Added Silence Mode guardrail in `detectCorePatterns` (returns `[]` when overall sample size is below threshold)
 - Limited surfaced core patterns to max 2 (`slice(0, 2)`)
 
 ### Debugging & Validation
+
 - Runtime verified `detectCorePatterns` now outputs `Array(2)` (previously `Array(3)`)
 - Confirmed prioritization works as intended:
   - Conversion Imbalance + Distribution Concentration surfaced
@@ -229,17 +243,20 @@ Logic layer (Week 3) untouched.
 - Verified narrative output across test scenarios
 
 ### Day 7 — Strength-Based Output Control
+
 - Weak patterns output Fact + Boundary only (reflection omitted); strong patterns include reflection
 
 ## [2026-03-06]
 
 ### Day 8 — Stage Layer Integration
+
 - Added stage-aware boundary tone in `narrateCorePatterns`
 - Applied confidence nuance without exposing numeric confidence
 - Fixed `applications` propagation in `detectCorePatterns`
 - Verified early / mid / late narrative boundary behavior
 
 ### Day 9 — Insight Prioritization Logic
+
 - Strong patterns prioritized
 - Max 2 insights exposed
 - Overload prevention rule added
@@ -247,6 +264,7 @@ Logic layer (Week 3) untouched.
 ## [2026-03-09]
 
 ### Day 10 — Final Integration & Refactor
+
 - Added unified insight engine entry with `buildInsightEngineResult`
 - Kept layer boundaries clear across stats, detection, and narration
 - Verified integrated pattern → narrative flow with debug cases
@@ -254,16 +272,19 @@ Logic layer (Week 3) untouched.
 ## [2026-03-10]
 
 ### Day 11 — Engine Result Contract Expansion
+
 - Extended `InsightEngineResult` to include `stats`
 - Verified unified engine output: stats, patterns, narratives
 - Confirmed integrated debug flow through `buildInsightEngineResult`
 
 ### Day 12 — CSV → Insight Pipeline Integration
+
 - Added `runInsightPipeline` as the unified CSV → Insight orchestration entry
 - Connected CSV parsing, stats generation, and insight engine
 - Returned full pipeline result including records, stats, patterns, and narratives
 
 ### Day 12 — Pipeline Interaction Insight
+
 - Added interaction insight generation to `runInsightPipeline`
 - Connected combined pattern interpretation after core insight detection
 - Verified pipeline structure for future UI rendering
@@ -290,6 +311,7 @@ Logic layer (Week 3) untouched.
   - pattern detection → narrative generation → UI rendering
 
 ### Day 15 — Product Integration & UI Flow
+
 - Built a basic product workflow:
   - CSV upload
   - file-ready state
@@ -300,7 +322,7 @@ Logic layer (Week 3) untouched.
 - Verified stable UI rendering with real dataset
 - Prepared structure for future improvements
 
-## [2026-03-23] - [2026-03-27] 
+## [2026-03-23] - [2026-03-27]
 
 ### Day 16: Insight Scoring System
 
@@ -322,6 +344,7 @@ Logic layer (Week 3) untouched.
 - Confirmed pattern-level score comparison is now available for future ranking
 
 ### Stats logic
+
 - detectCorePatterns(Finding patterns)
 - calculateInsightScore(calculation priority)
 - narrateCorePatterns(Explain)
@@ -342,33 +365,39 @@ Logic layer (Week 3) untouched.
   - narrateCorePatterns
   - buildInsightEngineResult
 
-## [2026-03-31] - [2026-04-03] 
+## [2026-03-31] - [2026-04-03]
 
 ### Day 18 — Action Generator
+
 - Implemented pattern → action mapping
 - Added `InsightAction` (title, description, priority)
 - Enabled actionable recommendations per insight
 
 ### Refactoring
+
 - Moved all types into `types/` folder
 - Consolidated debug logic into `app/debug`
 - Removed redundant debug files
 
 ### Naming Cleanup
+
 - `rankPatterns` → `rankInsightPatterns`
 - `filterPatternsForExposure` → `filterInsightPatterns`
 
 ### Validation
+
 - Verified identical outputs after refactor
   (patterns, filtering, narratives, actions)
 
 ### Result
+
 - Insight → Decision → Action flow completed
 - Improved structure and consistency
 
 ### Day 19 — Trend Analysis Layer(Judgement getting better or not?)
 
 ### Completed — Week 4 (Decision Layer)
+
 - Implemented insight scoring system (impact, urgency, consistency, confidence)
 - Built ranking system with prioritized top insights
 - Added action generator with structured schema
@@ -376,6 +405,7 @@ Logic layer (Week 3) untouched.
 - Upgraded Insight Card UI (Fact / Boundary / Reflection / Actions / Score)
 
 ### Planning — Week 5 (Decision Product Layer)
+
 - Defined transition from insight system → decision system
 - Designed Decision Sentence layer
 - Introduced Primary Decision concept (single focus)
@@ -385,48 +415,43 @@ Logic layer (Week 3) untouched.
 - Designed Decision Panel UI structure
 
 ### Direction Shift
+
 - From analysis-driven insights → decision-driven product
 - From descriptive output → actionable guidance
 
-## [2026-04-04] - [2026-04-05] Week 5 
+## [2026-04-04] - [2026-04-05] Week 5
 
 ### Added
+
 - Introduced Decision schema (`decision.types.ts`)
 - Implemented pattern → decision mapping (`generateDecision.ts`)
 - Added decision layer to insight pipeline
 
 ### Changed
+
 - Extended `buildInsightEngineResult` to include `decisions`
 
 ### Verified
+
 - Decision generation from exposed patterns
 - Directive-style decision sentences
 - Score and confidence propagation intact
 - No impact on narratives, actions, or cards
 
 ### Notes
+
 - Structural shift started: descriptive insight → directive decision
 
+### Added
 
+- Primary decision system (top-1 selection)
+- Supporting signals (remaining patterns)
 
+### Changed
 
+- Replaced `decisions[]` with `primaryDecision` and `supportingSignals`
 
+### Verified
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- Highest score selected correctly
+- No impact on existing pipeline

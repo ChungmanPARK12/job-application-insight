@@ -16,7 +16,8 @@ export type InsightEngineResult = {
   stats: StatsResult;
   patterns: RankedPattern[];
   filteredPatterns: FilteredPattern[];
-  decisions: Decision[];
+  primaryDecision: Decision | null;
+  supportingSignals: RankedPattern[];
   narratives: InsightNarrative[];
   actions: InsightAction[];
 };
@@ -37,21 +38,29 @@ export const buildInsightEngineResult = (
 
   const exposedPatterns = filteredPatterns.filter((item) => item.shouldExpose);
 
-  const decisions = exposedPatterns.map(generateDecision);
+  const primaryPattern = exposedPatterns[0];
+  const primaryDecision = primaryPattern
+    ? generateDecision(primaryPattern)
+    : null;
+
+  const supportingSignals = exposedPatterns.slice(1);
+
   const narratives = narrateCorePatterns(exposedPatterns);
   const actions = generateInsightActions(exposedPatterns);
 
   console.log("rankedPatterns", rankedPatterns);
   console.log("filteredPatterns", filteredPatterns);
   console.log("exposedPatterns", exposedPatterns);
-  console.log("decisions", decisions);
+  console.log("primaryDecision", primaryDecision);
+  console.log("supportingSignals", supportingSignals);
   console.log("actions", actions);
 
   return {
     stats,
     patterns: exposedPatterns,
     filteredPatterns,
-    decisions,
+    primaryDecision,
+    supportingSignals,
     narratives,
     actions,
   };
