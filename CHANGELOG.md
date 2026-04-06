@@ -455,3 +455,19 @@ Logic layer (Week 3) untouched.
 
 - Highest score selected correctly
 - No impact on existing pipeline
+
+## [2026-04-06] - [2026-04-10] Week 5
+
+### Added
+
+- Confidence label system (High / Medium / Low)
+- Basic decision reasoning
+
+### Changed
+
+- Converted confidence from number → structured object
+
+### Verified
+
+- Confidence label and reasoning correctly applied
+- Primary decision output enhanced without breaking pipeline

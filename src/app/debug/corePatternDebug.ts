@@ -122,7 +122,9 @@ export const runCorePatternDebug = (): void => {
           patternType: result.primaryDecision.patternType,
           decision: result.primaryDecision.decision,
           score: result.primaryDecision.score,
-          confidence: result.primaryDecision.confidence,
+          confidenceValue: result.primaryDecision.confidence.value,
+          confidenceLabel: result.primaryDecision.confidence.label,
+          reasoning: result.primaryDecision.reasoning,
         }
       : null,
   );
