@@ -1,10 +1,11 @@
+// lib/insights/generateInsightActions.ts
 import type { RankedPattern } from "./rankInsightPatterns";
 import type { InsightAction, ActionPriority } from "./types/action.types";
 
 const getMetric = (
   metrics: Record<string, unknown>,
   key: string,
-  fallback = 0
+  fallback = 0,
 ): number => {
   const value = metrics[key];
   return typeof value === "number" ? value : fallback;
@@ -97,7 +98,7 @@ const buildActionForPattern = (pattern: RankedPattern): InsightAction => {
 };
 
 export const generateInsightActions = (
-  patterns: RankedPattern[]
+  patterns: RankedPattern[],
 ): InsightAction[] => {
   return patterns.map(buildActionForPattern);
 };

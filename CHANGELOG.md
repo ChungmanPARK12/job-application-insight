@@ -471,3 +471,15 @@ Logic layer (Week 3) untouched.
 
 - Confidence label and reasoning correctly applied
 - Primary decision output enhanced without breaking pipeline
+
+## [2026-04-07] - Day 24
+
+### Added
+
+- ExecutionPlan and ExecutionStep types
+- buildExecutionPlan (pattern-based step generation)
+
+### Updated
+
+- Added executionPlan to Decision
+- Attached executionPlan to primaryDecision

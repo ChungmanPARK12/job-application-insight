@@ -1,4 +1,4 @@
-// insights/buildInsightEngineResult
+// src/lib/insights/buildInsightEngineResult.ts
 import type { StatsResult } from "@/lib/stats";
 import { detectCorePatterns } from "./detectCorePatterns";
 import { narrateCorePatterns } from "./narrateCorePatterns";
@@ -7,6 +7,7 @@ import { rankPatterns, type RankedPattern } from "./rankInsightPatterns";
 import { filterPatternsForExposure } from "./filterInsightPatterns";
 import { generateInsightActions } from "./generateInsightActions";
 import { generateDecision } from "./decision/generateDecision";
+import { buildExecutionPlan } from "./decision/buildExcecutionPlan";
 import type { FilteredPattern } from "./types/exposure.types";
 import type { InsightNarrative } from "./types/narration.types";
 import type { InsightAction } from "./types/action.types";
@@ -23,7 +24,7 @@ export type InsightEngineResult = {
 };
 
 export const buildInsightEngineResult = (
-  stats: StatsResult
+  stats: StatsResult,
 ): InsightEngineResult => {
   const patterns = detectCorePatterns(stats);
 
@@ -39,8 +40,18 @@ export const buildInsightEngineResult = (
   const exposedPatterns = filteredPatterns.filter((item) => item.shouldExpose);
 
   const primaryPattern = exposedPatterns[0];
+
+  const primaryAction = primaryPattern
+    ? (generateInsightActions([primaryPattern])[0] ?? null)
+    : null;
+
   const primaryDecision = primaryPattern
-    ? generateDecision(primaryPattern)
+    ? {
+        ...generateDecision(primaryPattern),
+        executionPlan: primaryAction
+          ? buildExecutionPlan(primaryPattern.type, primaryAction)
+          : undefined,
+      }
     : null;
 
   const supportingSignals = exposedPatterns.slice(1);

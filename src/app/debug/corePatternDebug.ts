@@ -125,6 +125,18 @@ export const runCorePatternDebug = (): void => {
           confidenceValue: result.primaryDecision.confidence.value,
           confidenceLabel: result.primaryDecision.confidence.label,
           reasoning: result.primaryDecision.reasoning,
+          executionPlan: result.primaryDecision.executionPlan
+            ? {
+                goal: result.primaryDecision.executionPlan.goal,
+                steps: result.primaryDecision.executionPlan.steps.map(
+                  (step) => ({
+                    step: step.step,
+                    title: step.title,
+                    type: step.type ?? "sequential",
+                  }),
+                ),
+              }
+            : null,
         }
       : null,
   );
@@ -175,6 +187,14 @@ export const runCorePatternDebug = (): void => {
   console.log("=== Insight Engine Debug Summary ===");
   console.log("patterns:", result.patterns.length);
   console.log("hasPrimaryDecision:", result.primaryDecision !== null);
+  console.log(
+    "hasExecutionPlan:",
+    result.primaryDecision?.executionPlan !== undefined,
+  );
+  console.log(
+    "executionSteps:",
+    result.primaryDecision?.executionPlan?.steps.length ?? 0,
+  );
   console.log("supportingSignals:", result.supportingSignals.length);
   console.log("narratives:", result.narratives.length);
   console.log("actions:", result.actions.length);
