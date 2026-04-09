@@ -472,7 +472,7 @@ Logic layer (Week 3) untouched.
 - Confidence label and reasoning correctly applied
 - Primary decision output enhanced without breaking pipeline
 
-## [2026-04-07] - Day 24
+## Day 24
 
 ### Added
 
@@ -483,3 +483,32 @@ Logic layer (Week 3) untouched.
 
 - Added executionPlan to Decision
 - Attached executionPlan to primaryDecision
+
+## [Day 25] - Outcome Projection Layer
+
+### Added
+
+- Introduced `OutcomeProjection` schema in `decision.types.ts`
+- Implemented `buildOutcomeProjection` to generate expected decision impact
+- Added direction (`increase | decrease | stable`) and magnitude (`low | medium | high`)
+- Included:
+  - `expectedImprovement`
+  - `summary`
+  - `reasoning`
+
+### Updated
+
+- Extended `Decision` type to include `outcomeProjection`
+- Integrated outcome projection into `buildInsightEngineResult`
+- Connected pipeline:
+  Pattern → Decision → Execution Plan → Outcome Projection
+
+### Result
+
+- Primary decision now includes expected outcome
+- Completed transition from Insight Engine → Decision Engine (core flow)
+
+### Notes
+
+- Outcome is rule-based and directional (non-deterministic)
+- Confidence level influences magnitude and phrasing

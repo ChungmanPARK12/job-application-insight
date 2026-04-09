@@ -22,6 +22,17 @@ export interface ExecutionPlan {
   steps: ExecutionStep[];
 }
 
+export type OutcomeDirection = "increase" | "decrease" | "stable";
+export type OutcomeMagnitude = "low" | "medium" | "high";
+
+export interface OutcomeProjection {
+  direction: OutcomeDirection;
+  magnitude: OutcomeMagnitude;
+  expectedImprovement?: string;
+  summary: string;
+  reasoning: string;
+}
+
 export interface Decision {
   patternType: string;
   decision: string;
@@ -29,6 +40,7 @@ export interface Decision {
   score: number;
   confidence: DecisionConfidence;
   executionPlan?: ExecutionPlan;
+  outcomeProjection?: OutcomeProjection;
 }
 
 export interface PrimaryDecisionResult {

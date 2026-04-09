@@ -8,6 +8,7 @@ import { filterPatternsForExposure } from "./filterInsightPatterns";
 import { generateInsightActions } from "./generateInsightActions";
 import { generateDecision } from "./decision/generateDecision";
 import { buildExecutionPlan } from "./decision/buildExcecutionPlan";
+import { buildOutcomeProjection } from "./decision/buildOutcomeProjection";
 import type { FilteredPattern } from "./types/exposure.types";
 import type { InsightNarrative } from "./types/narration.types";
 import type { InsightAction } from "./types/action.types";
@@ -46,12 +47,23 @@ export const buildInsightEngineResult = (
     : null;
 
   const primaryDecision = primaryPattern
-    ? {
-        ...generateDecision(primaryPattern),
-        executionPlan: primaryAction
+    ? (() => {
+        const decision = generateDecision(primaryPattern);
+        const executionPlan = primaryAction
           ? buildExecutionPlan(primaryPattern.type, primaryAction)
-          : undefined,
-      }
+          : undefined;
+
+        const outcomeProjection = buildOutcomeProjection({
+          pattern: primaryPattern,
+          confidenceLabel: decision.confidence.label,
+        });
+
+        return {
+          ...decision,
+          executionPlan,
+          outcomeProjection,
+        };
+      })()
     : null;
 
   const supportingSignals = exposedPatterns.slice(1);

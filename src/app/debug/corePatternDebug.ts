@@ -125,6 +125,7 @@ export const runCorePatternDebug = (): void => {
           confidenceValue: result.primaryDecision.confidence.value,
           confidenceLabel: result.primaryDecision.confidence.label,
           reasoning: result.primaryDecision.reasoning,
+
           executionPlan: result.primaryDecision.executionPlan
             ? {
                 goal: result.primaryDecision.executionPlan.goal,
@@ -135,6 +136,17 @@ export const runCorePatternDebug = (): void => {
                     type: step.type ?? "sequential",
                   }),
                 ),
+              }
+            : null,
+
+          outcomeProjection: result.primaryDecision.outcomeProjection
+            ? {
+                direction: result.primaryDecision.outcomeProjection.direction,
+                magnitude: result.primaryDecision.outcomeProjection.magnitude,
+                expectedImprovement:
+                  result.primaryDecision.outcomeProjection.expectedImprovement,
+                summary: result.primaryDecision.outcomeProjection.summary,
+                reasoning: result.primaryDecision.outcomeProjection.reasoning,
               }
             : null,
         }
