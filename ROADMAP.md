@@ -322,3 +322,117 @@ Pattern → Decision → Plan → Outcome
 - Describe → Decide
 - Multiple signals → Single focus
 - User interprets → System recommends
+
+# Insight Engine — Week 6 Roadmap (Productization Layer)
+
+## 🎯 Goal
+
+Transform the insight engine from a functional system into a product-grade decision experience.
+
+Shift focus:
+
+- From **correctness** → to **clarity**
+- From **data output** → to **user decision guidance**
+
+---
+
+## Day 26 — Decision Panel Integration ✅ (Completed)
+
+### Summary
+
+- Decision pipeline successfully connected to UI
+- Primary decision, reasoning, action, outcome, and confidence exposed
+- End-to-end decision flow validated
+
+---
+
+## Day 27 — Language & Interpretation Layer
+
+### Goal
+
+Convert system-generated output into clear, user-readable decision language
+
+### Tasks
+
+- Map raw pattern types to human-readable explanations
+- Refine decision and outcome phrasing
+- Improve confidence tone (e.g., "Medium confidence" → more contextual wording)
+- Replace or remove mechanical labels (e.g., "Direction: increase")
+- Eliminate redundant or repetitive phrasing
+
+### Expected Outcome
+
+- Decision panel reads like a human recommendation, not a system log
+
+---
+
+## Day 28 — UI Structure & Visual Hierarchy
+
+### Goal
+
+Improve readability and scan-ability of the decision panel
+
+### Tasks
+
+- Refine layout spacing and grouping
+- Improve card structure (padding, borders, visual separation)
+- Emphasize key sections:
+  - Decision (primary focus)
+  - Action (clear steps)
+- Convert execution steps into structured visual format (numbered or timeline)
+- Style confidence as a badge or visual indicator
+
+### Expected Outcome
+
+- Users can understand the decision within a few seconds
+
+---
+
+## Day 29 — Insight Simplification Layer
+
+### Goal
+
+Reduce cognitive load by showing only the most relevant signals
+
+### Tasks
+
+- Limit supporting signals to top 2–3 items
+- Filter out weak or low-impact signals
+- Enforce concise "Why this matters" summary (1–2 sentences)
+- Consider optional expansion (e.g., "Show more")
+
+### Expected Outcome
+
+- Cleaner, more focused decision output
+- Reduced information overload
+
+---
+
+## Day 30 — Narrative Consistency & Flow
+
+### Goal
+
+Ensure the decision panel reads as a single coherent narrative
+
+### Tasks
+
+- Validate logical flow:
+  - Decision → Why → Action → Outcome
+- Ensure consistency between reasoning and recommended actions
+- Align outcome expectations with confidence level
+- Adjust tone for consistency across all sections
+
+### Expected Outcome
+
+- Decision panel feels like a single, unified recommendation
+
+---
+
+## ✅ End of Week 6 State
+
+- Decision system is not only functional but **usable and intuitive**
+- Output is:
+  - Clear
+  - Concise
+  - Actionable
+- System behaves like a **decision-making assistant**, not just an analytics tool

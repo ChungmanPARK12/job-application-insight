@@ -4,8 +4,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { parseCsvText } from "@/domains/processA/parsers/csv";
 import { runInsightPipeline } from "@/lib/insights/runInsightsPipeline";
-import { buildInsightCards } from "@/lib/insights/buildInsightCards";
-import InsightPanel from "@/components/insights/InsightPanel";
+import { mapToDecisionPanel } from "@/lib/insights/decision/mapToDecisionPanel";
+import { DecisionPanel } from "@/components/insights/DecisionPanel";
 
 // ---------- local types ----------
 type LoadState =
@@ -192,10 +192,7 @@ const BreakdownCard = ({
                   <span style={{ opacity: 0.8 }}> — {r.count}</span>
                 ) : null}
                 {pct ? (
-                  <span style={{ opacity: 0.8 }}>
-                    {" "}
-                    • interview rate {pct}
-                  </span>
+                  <span style={{ opacity: 0.8 }}> • interview rate {pct}</span>
                 ) : null}
               </li>
             );
@@ -211,7 +208,9 @@ export default function Home() {
   const [state, setState] = useState<LoadState>({ status: "idle" });
   const [debug, setDebug] = useState(false);
 
-  const onSelectFile: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
+  const onSelectFile: React.ChangeEventHandler<HTMLInputElement> = async (
+    e,
+  ) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -245,7 +244,8 @@ export default function Home() {
 
   // 1) Parse + full insight pipeline
   const pipeline = useMemo(() => {
-    if (state.status !== "analyzing" && state.status !== "analyzed") return null;
+    if (state.status !== "analyzing" && state.status !== "analyzed")
+      return null;
 
     const parsed = parseCsvText(state.text);
     const result = runInsightPipeline(parsed);
@@ -303,19 +303,16 @@ export default function Home() {
     return pipeline.result.actions;
   }, [pipeline]);
 
-  const cards = useMemo(() => {
-    if (!pipeline?.result.ok) return [];
-
-    return buildInsightCards({
-      patterns: pipeline.result.patterns,
-      narratives: pipeline.result.narratives,
-      actions: pipeline.result.actions,
-    });
-  }, [pipeline]);
-
   const interactions = useMemo(() => {
     if (!pipeline?.result.ok) return [];
     return pipeline.result.interactions;
+  }, [pipeline]);
+
+  const decisionPanelData = useMemo(() => {
+    if (!pipeline?.result?.ok) return null;
+
+    const result = pipeline.result; // 타입 확정
+    return mapToDecisionPanel(result);
   }, [pipeline]);
 
   // ----- Presentation extraction (best-effort, guardrail safe) -----
@@ -330,14 +327,16 @@ export default function Home() {
         overallObj?.total,
         overallObj?.applications,
         overallObj?.totalApplications,
-        s.total
-      ) ?? (records?.length ?? null);
+        s.total,
+      ) ??
+      records?.length ??
+      null;
 
     const interviewRate =
       pickFirstNumber(
         overallObj?.interviewRate,
         overallObj?.interview_rate,
-        overallObj?.rate
+        overallObj?.rate,
       ) ?? null;
 
     const statusCounts =
@@ -345,7 +344,7 @@ export default function Home() {
         overallObj?.by_status,
         overallObj?.statusCounts,
         overallObj?.status_counts,
-        overallObj?.statuses
+        overallObj?.statuses,
       ) ??
       pickFirstObject(s.by_status, s.statusCounts, s.status_counts) ??
       null;
@@ -391,14 +390,14 @@ export default function Home() {
       <header style={{ marginBottom: 18 }}>
         <h1 style={{ marginBottom: 6 }}>Job Application Insight System</h1>
         <p style={{ margin: 0, opacity: 0.8, lineHeight: 1.5 }}>
-          Productization Layer (Week 3) — CSV upload, insight pipeline, and
-          presentation cards for non-technical viewers.
+          Productization Layer (Week 5) — CSV upload, decision pipeline, and
+          guided recommendation output for non-technical viewers.
         </p>
       </header>
 
       <Card
         title="CSV Upload"
-        subtitle="Upload a .csv file. The system will validate headers, normalize statuses, compute stats, detect patterns, and generate prioritized insight narratives."
+        subtitle="Upload a .csv file. The system will validate headers, normalize statuses, compute stats, detect patterns, generate a primary decision, and project the expected outcome."
         right={
           <label
             style={{
@@ -508,11 +507,11 @@ export default function Home() {
                   patterns,
                   narratives,
                   actions,
-                  cards,
                   interactions,
+                  decisionPanelData,
                 },
                 null,
-                2
+                2,
               )}
             </pre>
           </div>
@@ -531,7 +530,7 @@ export default function Home() {
                 label="Interview rate"
                 value={
                   overall?.interviewRate != null
-                    ? formatPct(overall.interviewRate) ?? "—"
+                    ? (formatPct(overall.interviewRate) ?? "—")
                     : "—"
                 }
               />
@@ -552,37 +551,17 @@ export default function Home() {
               </div>
             ) : (
               <div style={{ marginTop: 12, opacity: 0.75, fontSize: 13 }}>
-                Status distribution is not available in the current stats output.
+                Status distribution is not available in the current stats
+                output.
               </div>
             )}
           </Card>
 
           <Card
-            title="Key Insights"
-            subtitle="Prioritized reflection narratives. These are descriptive signals, not deterministic conclusions."
+            title="Decision Panel"
+            subtitle="A single guided recommendation based on the strongest current signal."
           >
-            <InsightPanel cards={cards} maxItems={2} />
-
-            {interactions.length > 0 ? (
-              <div style={{ marginTop: 14, display: "grid", gap: 12 }}>
-                {interactions.map((item, idx) => (
-                  <div
-                    key={`interaction-${idx}`}
-                    style={{
-                      border: "1px solid #eee",
-                      borderRadius: 12,
-                      padding: 14,
-                      background: "#fafafa",
-                    }}
-                  >
-                    <div style={{ fontWeight: 700, marginBottom: 6 }}>
-                      {item.title}
-                    </div>
-                    <div style={{ lineHeight: 1.65 }}>{item.text}</div>
-                  </div>
-                ))}
-              </div>
-            ) : null}
+            <DecisionPanel data={decisionPanelData} />
           </Card>
 
           <Card
@@ -633,9 +612,9 @@ export default function Home() {
       >
         <div style={{ fontWeight: 700, marginBottom: 6 }}>Work status</div>
         <ul style={{ margin: 0, paddingLeft: 18 }}>
-          <li>Week 3 pipeline integrated (CSV → stats → insight engine)</li>
-          <li>Insight narratives connected to the presentation layer</li>
-          <li>Insight cards connected to the UI layer</li>
+          <li>Week 5 decision pipeline integrated</li>
+          <li>Primary decision connected to the presentation layer</li>
+          <li>Decision panel connected to the UI layer</li>
         </ul>
       </footer>
     </main>

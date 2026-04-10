@@ -13,8 +13,11 @@ export type InsightPipelineSuccess = {
   records: ApplicationRecord[];
   stats: InsightEngineResult["stats"];
   patterns: InsightEngineResult["patterns"];
+  filteredPatterns: InsightEngineResult["filteredPatterns"];
   narratives: InsightEngineResult["narratives"];
   actions: InsightEngineResult["actions"];
+  primaryDecision: InsightEngineResult["primaryDecision"];
+  supportingSignals: InsightEngineResult["supportingSignals"];
   interactions: ReturnType<typeof buildInteractionInsights>;
   csvMeta: {
     totalRows: number;
@@ -29,10 +32,12 @@ export type InsightPipelineError = {
   details: unknown;
 };
 
-export type InsightPipelineResult = InsightPipelineSuccess | InsightPipelineError;
+export type InsightPipelineResult =
+  | InsightPipelineSuccess
+  | InsightPipelineError;
 
 export const runInsightPipeline = (
-  parsed: ParsedCSV
+  parsed: ParsedCSV,
 ): InsightPipelineResult => {
   const csvResult = runCsvPipeline(parsed);
 
@@ -54,8 +59,11 @@ export const runInsightPipeline = (
     records: csvResult.records,
     stats: insightResult.stats,
     patterns: insightResult.patterns,
+    filteredPatterns: insightResult.filteredPatterns,
     narratives: insightResult.narratives,
     actions: insightResult.actions,
+    primaryDecision: insightResult.primaryDecision,
+    supportingSignals: insightResult.supportingSignals,
     interactions,
     csvMeta: csvResult.meta,
   };

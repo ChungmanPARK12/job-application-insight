@@ -512,3 +512,8 @@ Logic layer (Week 3) untouched.
 
 - Outcome is rule-based and directional (non-deterministic)
 - Confidence level influences magnitude and phrasing
+
+## Day 26 - UI
+
+- Extended `mapToDecisionPanel`, `decisionPanel.types`.
+- Completed Decision section in UI
