@@ -8,23 +8,23 @@ const buildConversionPlan = (action: InsightAction): ExecutionPlan => {
     steps: [
       {
         step: 1,
-        title: "Audit recent application inputs",
+        title: "Review your recent applications",
         description:
-          "Review recent applications by resume version, job source, location, and role level.",
+          "Start by reviewing your recent applications across resume versions, job sources, locations, and role levels to spot any meaningful differences.",
         type: "sequential",
       },
       {
         step: 2,
-        title: "Identify the weakest conversion variable",
+        title: "Identify the weakest conversion factor",
         description:
-          "Find which variable appears most often in lower interview-rate or response-rate outcomes.",
+          "Look for the factor that appears most often in lower interview-rate or response-rate outcomes.",
         type: "sequential",
       },
       {
         step: 3,
-        title: "Run one controlled adjustment",
+        title: "Test one focused change",
         description:
-          "Change only one variable in the next application batch and track whether conversion improves.",
+          "Apply one controlled change in your next batch of applications and observe whether conversion improves.",
         type: "sequential",
       },
     ],
@@ -37,23 +37,23 @@ const buildDistributionPlan = (action: InsightAction): ExecutionPlan => {
     steps: [
       {
         step: 1,
-        title: "Confirm the dominant segment",
+        title: "Review where your applications are concentrated",
         description:
-          "Identify which source, location, or category currently dominates your application distribution.",
+          "Check which source, location, or category currently receives most of your applications.",
         type: "sequential",
       },
       {
         step: 2,
-        title: "Select one adjacent segment",
+        title: "Choose one nearby segment to test",
         description:
-          "Choose one nearby alternative segment that is realistic to test in the next cycle.",
+          "Pick one realistic adjacent segment that you can include in your next application cycle.",
         type: "sequential",
       },
       {
         step: 3,
-        title: "Track both side by side",
+        title: "Compare the results side by side",
         description:
-          "Compare the current dominant segment and the new segment in parallel during the next application cycle.",
+          "Track the current dominant segment and the new segment together in the next cycle to see whether the wider distribution improves results.",
         type: "parallel",
       },
     ],
@@ -66,23 +66,23 @@ const buildTargetNarrownessPlan = (action: InsightAction): ExecutionPlan => {
     steps: [
       {
         step: 1,
-        title: "Confirm the current target focus",
+        title: "Review your current target focus",
         description:
-          "Identify which keyword group or position cluster currently dominates your targeting scope.",
+          "Check which keyword group or position cluster currently dominates your application targeting.",
         type: "sequential",
       },
       {
         step: 2,
-        title: "Add one adjacent target group",
+        title: "Add one closely related target group",
         description:
-          "Choose one closely related keyword group or position cluster that still matches your background.",
+          "Choose one nearby keyword group or position cluster that still fits your background and experience.",
         type: "sequential",
       },
       {
         step: 3,
-        title: "Measure coverage impact",
+        title: "Measure whether broader targeting helps",
         description:
-          "Track whether the wider target range improves response volume or interview opportunities.",
+          "Track whether the wider target range leads to more responses or interview opportunities in the next cycle.",
         type: "sequential",
       },
     ],
@@ -95,23 +95,23 @@ const buildFallbackPlan = (action: InsightAction): ExecutionPlan => {
     steps: [
       {
         step: 1,
-        title: "Review the signal context",
+        title: "Review what this signal is showing",
         description:
-          "Check the surrounding application context and clarify what this signal is indicating.",
+          "Start by checking the surrounding application context so you can understand what this signal may be pointing to.",
         type: "sequential",
       },
       {
         step: 2,
-        title: "Define one small adjustment",
+        title: "Choose one small adjustment",
         description:
-          "Choose one specific and trackable change for the next cycle.",
+          "Select one clear and trackable change to apply in the next cycle.",
         type: "sequential",
       },
       {
         step: 3,
-        title: "Observe the next outcome",
+        title: "Compare the next results",
         description:
-          "Compare the next cycle against the current baseline and check whether the change helped.",
+          "Use the next cycle as a comparison point and check whether the change led to a better outcome.",
         type: "sequential",
       },
     ],

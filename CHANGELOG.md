@@ -517,3 +517,22 @@ Logic layer (Week 3) untouched.
 
 - Extended `mapToDecisionPanel`, `decisionPanel.types`.
 - Completed Decision section in UI
+
+## [2026-04-13] - [2026-04-18]
+
+## Day 27 - Language & Interpretation Layer
+
+### Improvements
+
+- Added language formatter for user-friendly output
+- Replaced raw/system labels with natural phrasing
+- Improved confidence and outcome messaging
+
+### Execution Plan
+
+- Converted steps from instruction tone → advisory tone
+- Refined step descriptions for clarity
+
+### Result
+
+- Decision panel now reads like a human recommendation

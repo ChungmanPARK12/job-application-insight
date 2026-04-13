@@ -1,4 +1,9 @@
 import type { DecisionPanelData } from "@/lib/insights/types/decisionPanel.types";
+import {
+  formatPatternType,
+  formatOutcomeDirection,
+  formatConfidenceLabel,
+} from "@/lib/insights/formatters/decisionFormatter";
 
 type DecisionPanelProps = {
   data: DecisionPanelData | null;
@@ -13,6 +18,8 @@ export const DecisionPanel = ({ data }: DecisionPanelProps) => {
       </section>
     );
   }
+
+  const formattedDirection = formatOutcomeDirection(data.outcome.direction);
 
   return (
     <section>
@@ -30,7 +37,9 @@ export const DecisionPanel = ({ data }: DecisionPanelProps) => {
         {data.why.supportingSignals.length > 0 && (
           <ul>
             {data.why.supportingSignals.map((signal, index) => (
-              <li key={`${signal.type}-${index}`}>{signal.type}</li>
+              <li key={`${signal.type}-${index}`}>
+                {formatPatternType(signal.type)}
+              </li>
             ))}
           </ul>
         )}
@@ -59,20 +68,16 @@ export const DecisionPanel = ({ data }: DecisionPanelProps) => {
 
         {data.outcome.improvement && (
           <p>
-            <strong>Expected improvement:</strong> {data.outcome.improvement}
+            <strong>Estimated impact:</strong> {data.outcome.improvement}
           </p>
         )}
 
-        {data.outcome.direction && (
-          <p>
-            <strong>Direction:</strong> {data.outcome.direction}
-          </p>
-        )}
+        {formattedDirection && <p>{formattedDirection}</p>}
       </div>
 
       <div>
         <h3>Confidence</h3>
-        <p>{data.confidence.label}</p>
+        <p>{formatConfidenceLabel(data.confidence.label)}</p>
 
         {data.confidence.reasoning && <p>{data.confidence.reasoning}</p>}
       </div>

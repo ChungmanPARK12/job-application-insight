@@ -323,9 +323,9 @@ Pattern → Decision → Plan → Outcome
 - Multiple signals → Single focus
 - User interprets → System recommends
 
-# Insight Engine — Week 6 Roadmap (Productization Layer)
+# Week 6 Roadmap (Productization Layer)
 
-## 🎯 Goal
+## Goal
 
 Transform the insight engine from a functional system into a product-grade decision experience.
 
@@ -336,7 +336,7 @@ Shift focus:
 
 ---
 
-## Day 26 — Decision Panel Integration ✅ (Completed)
+## Day 26 — Decision Panel Integration (Completed)
 
 ### Summary
 
@@ -428,7 +428,7 @@ Ensure the decision panel reads as a single coherent narrative
 
 ---
 
-## ✅ End of Week 6 State
+## End of Week 6 State
 
 - Decision system is not only functional but **usable and intuitive**
 - Output is:
