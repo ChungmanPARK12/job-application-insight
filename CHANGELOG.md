@@ -536,3 +536,13 @@ Logic layer (Week 3) untouched.
 ### Result
 
 - Decision panel now reads like a human recommendation
+
+## Day 28 — UI Structure
+
+- Refactored DecisionPanel to match existing inline style system
+- Structured sections: Decision, Why, Action, Outcome, Confidence
+- Converted actions into step-based blocks
+- Limited supporting signals to top 3
+- Improved readability and visual hierarchy
+
+Result: clearer and more scannable decision panel
