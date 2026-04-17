@@ -9,7 +9,7 @@ const MAX_EXPOSED_INSIGHTS = 2;
 const getMetric = (
   metrics: Record<string, unknown>,
   key: string,
-  fallback = 0
+  fallback = 0,
 ): number => {
   const value = metrics[key];
   return typeof value === "number" ? value : fallback;
@@ -37,9 +37,13 @@ const decideExposure = (item: RankedPattern): ExposureDecision => {
 };
 
 export const filterPatternsForExposure = (
-  rankedPatterns: RankedPattern[]
+  rankedPatterns: RankedPattern[],
 ): FilteredPattern[] => {
-  const base: FilteredPattern[] = rankedPatterns.map((item) => {
+  const sorted = [...rankedPatterns].sort(
+    (a, b) => (b.score?.finalScore ?? 0) - (a.score?.finalScore ?? 0),
+  );
+
+  const base: FilteredPattern[] = sorted.map((item) => {
     const exposureDecision = decideExposure(item);
 
     return {

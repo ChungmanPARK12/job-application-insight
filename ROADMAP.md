@@ -346,7 +346,7 @@ Shift focus:
 
 ---
 
-## Day 27 — Language & Interpretation Layer
+## Day 27 — Language & Interpretation Layer(Completed)
 
 ### Goal
 

@@ -546,3 +546,12 @@ Logic layer (Week 3) untouched.
 - Improved readability and visual hierarchy
 
 Result: clearer and more scannable decision panel
+
+## Day 29 — Insight Simplification
+
+- Limited supporting signals to top N
+- Filtered low-quality patterns (sample, confidence, weak score)
+- Added sorting by finalScore
+- Compressed "Why" and "Outcome" summaries
+
+Result: clearer, more focused decision output

@@ -2,6 +2,31 @@ import type { InsightEngineResult } from "../buildInsightEngineResult";
 import type { DecisionPanelData } from "../types/decisionPanel.types";
 import type { ExecutionStep } from "../types/decision.types";
 
+const compressSummary = (
+  text: string,
+  maxSentences = 2,
+  maxLength = 180,
+): string => {
+  const normalized = text.replace(/\s+/g, " ").trim();
+
+  if (!normalized) {
+    return "Key signals support this recommendation.";
+  }
+
+  const sentences = normalized
+    .split(/(?<=[.!?])\s+/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean);
+
+  const limitedSentences = sentences.slice(0, maxSentences).join(" ");
+
+  if (limitedSentences.length <= maxLength) {
+    return limitedSentences;
+  }
+
+  return `${limitedSentences.slice(0, maxLength).trimEnd()}...`;
+};
+
 export const mapToDecisionPanel = (
   result: InsightEngineResult,
 ): DecisionPanelData | null => {
@@ -17,7 +42,9 @@ export const mapToDecisionPanel = (
     },
 
     why: {
-      summary: decision.reasoning || "Key signals support this recommendation.",
+      summary: compressSummary(
+        decision.reasoning || "Key signals support this recommendation.",
+      ),
       supportingSignals: result.supportingSignals || [],
     },
 
@@ -33,9 +60,10 @@ export const mapToDecisionPanel = (
     },
 
     outcome: {
-      summary:
+      summary: compressSummary(
         decision.outcomeProjection?.summary ||
-        "A measurable improvement is expected if this plan is followed.",
+          "A measurable improvement is expected if this plan is followed.",
+      ),
       improvement: decision.outcomeProjection?.expectedImprovement,
       direction: decision.outcomeProjection?.direction,
     },
