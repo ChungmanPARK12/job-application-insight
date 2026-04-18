@@ -45,30 +45,30 @@ const getExpectedImprovement = (
   switch (patternType) {
     case "conversion_imbalance":
       if (magnitude === "high") {
-        return "Potential for a strong improvement in interview conversion.";
+        return "Strong potential to improve overall conversion.";
       }
       if (magnitude === "medium") {
-        return "Potential for a moderate improvement in interview conversion.";
+        return "Moderate potential to improve overall conversion.";
       }
-      return "Potential for a limited but meaningful improvement in interview conversion.";
+      return "Limited but meaningful potential to improve overall conversion.";
 
     case "distribution_concentration":
       if (magnitude === "high") {
-        return "Potential for a strong improvement by reducing source concentration risk.";
+        return "Strong potential to improve results by reducing dependence on a small number of sources.";
       }
       if (magnitude === "medium") {
-        return "Potential for a moderate improvement by broadening opportunity distribution.";
+        return "Moderate potential to improve results through a more balanced application mix.";
       }
-      return "Potential for a limited but useful improvement through better distribution balance.";
+      return "Limited but useful potential to improve results through better distribution balance.";
 
     case "target_narrowness":
       if (magnitude === "high") {
-        return "Potential for a strong improvement by expanding beyond a narrow target range.";
+        return "Strong potential to improve results by expanding into a wider target range.";
       }
       if (magnitude === "medium") {
-        return "Potential for a moderate improvement by widening target coverage.";
+        return "Moderate potential to improve results by widening target coverage.";
       }
-      return "Potential for a limited but meaningful improvement from broader targeting.";
+      return "Limited but meaningful potential to improve results through broader targeting.";
 
     default:
       return undefined;
@@ -87,30 +87,30 @@ const getOutcomeSummary = (
   switch (patternType) {
     case "conversion_imbalance":
       if (magnitude === "high") {
-        return "This decision is likely to produce a strong upward shift in interview conversion.";
+        return "Improving weaker areas is likely to create a strong lift in overall conversion.";
       }
       if (magnitude === "medium") {
-        return "This decision is likely to improve interview conversion in a measurable way.";
+        return "Improving weaker areas should lead to higher overall conversion.";
       }
-      return "This decision may create a modest improvement in interview conversion.";
+      return "Improving weaker areas may lead to a modest gain in overall conversion.";
 
     case "distribution_concentration":
       if (magnitude === "high") {
-        return "This decision is likely to improve outcomes by reducing over-concentration risk.";
+        return "Reducing over-reliance on a few sources is likely to improve overall results.";
       }
       if (magnitude === "medium") {
-        return "This decision is expected to improve outcomes by spreading effort more effectively.";
+        return "A more balanced distribution should improve overall results.";
       }
-      return "This decision may improve outcome stability through better distribution balance.";
+      return "Better distribution balance may lead to more stable results.";
 
     case "target_narrowness":
       if (magnitude === "high") {
-        return "This decision is likely to improve outcomes by expanding into stronger adjacent targets.";
+        return "Expanding your target range is likely to improve access to stronger opportunities.";
       }
       if (magnitude === "medium") {
-        return "This decision is expected to improve outcomes by widening the current target range.";
+        return "A broader target range should improve opportunity coverage.";
       }
-      return "This decision may improve results by slightly broadening target coverage.";
+      return "Slightly broader targeting may improve reach and response potential.";
 
     default:
       return "This decision is expected to create a positive directional outcome.";
@@ -123,23 +123,23 @@ const getOutcomeReasoning = (
 ): string => {
   const confidencePhrase =
     confidenceLabel === "High"
-      ? "The signal is supported by relatively strong confidence."
+      ? "This expectation is supported by relatively strong confidence."
       : confidenceLabel === "Medium"
-        ? "The signal has moderate confidence and supports directional action."
-        : "The signal is weaker, so the expected outcome should be treated cautiously.";
+        ? "This expectation is supported by moderate confidence."
+        : "This expectation should be treated cautiously because confidence is still limited.";
 
   switch (patternType) {
     case "conversion_imbalance":
-      return `${confidencePhrase} Current performance suggests that improving the weakest conversion area can raise overall interview efficiency.`;
+      return `${confidencePhrase} Current results suggest that improving weaker areas can lift overall conversion.`;
 
     case "distribution_concentration":
-      return `${confidencePhrase} The current pattern shows over-reliance on a narrow distribution, so rebalancing effort should improve resilience and opportunity flow.`;
+      return `${confidencePhrase} Current results suggest that reducing dependence on a narrow set of sources can improve balance and overall performance.`;
 
     case "target_narrowness":
-      return `${confidencePhrase} The current pattern suggests that opportunity coverage is too narrow, so expanding target breadth should improve reach and result quality.`;
+      return `${confidencePhrase} Current results suggest that a wider target range can improve coverage and create more opportunities.`;
 
     default:
-      return `${confidencePhrase} The detected pattern supports a directional adjustment with a reasonable expected benefit.`;
+      return `${confidencePhrase} The detected pattern supports a directional adjustment with possible upside.`;
   }
 };
 

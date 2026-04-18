@@ -8,23 +8,23 @@ const buildConversionPlan = (action: InsightAction): ExecutionPlan => {
     steps: [
       {
         step: 1,
-        title: "Review your recent applications",
+        title: "Review underperforming areas in recent applications",
         description:
-          "Start by reviewing your recent applications across resume versions, job sources, locations, and role levels to spot any meaningful differences.",
+          "Review your recent applications across resume versions, job sources, locations, and role levels to find where results are weakest.",
         type: "sequential",
       },
       {
         step: 2,
-        title: "Identify the weakest conversion factor",
+        title: "Find the main reason results are weaker",
         description:
-          "Look for the factor that appears most often in lower interview-rate or response-rate outcomes.",
+          "Look for the area that appears most often in lower interview-rate or response-rate outcomes.",
         type: "sequential",
       },
       {
         step: 3,
-        title: "Test one focused change",
+        title: "Test one focused improvement",
         description:
-          "Apply one controlled change in your next batch of applications and observe whether conversion improves.",
+          "Apply one clear change in your next batch of applications and check whether results improve.",
         type: "sequential",
       },
     ],
@@ -37,23 +37,23 @@ const buildDistributionPlan = (action: InsightAction): ExecutionPlan => {
     steps: [
       {
         step: 1,
-        title: "Review where your applications are concentrated",
+        title: "Review where most applications are going",
         description:
           "Check which source, location, or category currently receives most of your applications.",
         type: "sequential",
       },
       {
         step: 2,
-        title: "Choose one nearby segment to test",
+        title: "Add one nearby area to test",
         description:
-          "Pick one realistic adjacent segment that you can include in your next application cycle.",
+          "Choose one realistic nearby area that you can include in your next application cycle.",
         type: "sequential",
       },
       {
         step: 3,
         title: "Compare the results side by side",
         description:
-          "Track the current dominant segment and the new segment together in the next cycle to see whether the wider distribution improves results.",
+          "Track the current main area and the new area together in the next cycle to see whether broader distribution improves results.",
         type: "parallel",
       },
     ],
@@ -68,12 +68,12 @@ const buildTargetNarrownessPlan = (action: InsightAction): ExecutionPlan => {
         step: 1,
         title: "Review your current target focus",
         description:
-          "Check which keyword group or position cluster currently dominates your application targeting.",
+          "Check which keyword group or position cluster currently makes up most of your application targeting.",
         type: "sequential",
       },
       {
         step: 2,
-        title: "Add one closely related target group",
+        title: "Add one closely related target area",
         description:
           "Choose one nearby keyword group or position cluster that still fits your background and experience.",
         type: "sequential",
@@ -95,14 +95,14 @@ const buildFallbackPlan = (action: InsightAction): ExecutionPlan => {
     steps: [
       {
         step: 1,
-        title: "Review what this signal is showing",
+        title: "Review what the current results suggest",
         description:
-          "Start by checking the surrounding application context so you can understand what this signal may be pointing to.",
+          "Start by checking the surrounding application context so you can understand what this result may be pointing to.",
         type: "sequential",
       },
       {
         step: 2,
-        title: "Choose one small adjustment",
+        title: "Choose one small improvement",
         description:
           "Select one clear and trackable change to apply in the next cycle.",
         type: "sequential",

@@ -17,6 +17,15 @@ const sectionStyle: CSSProperties = {
   background: "#ffffff",
 };
 
+const primaryDecisionCardStyle: CSSProperties = {
+  border: "1px solid #e5e7eb",
+  borderLeft: "4px solid #111111",
+  borderRadius: 14,
+  padding: "16px 18px",
+  background: "#ffffff",
+  boxShadow: "0 1px 2px rgba(0, 0, 0, 0.04)",
+};
+
 const sectionTitleStyle: CSSProperties = {
   margin: 0,
   fontSize: 15,
@@ -142,10 +151,6 @@ const getConfidenceBadgeStyle = (
   }
 };
 
-const headerBlockStyle: CSSProperties = {
-  marginBottom: 14,
-};
-
 const labelStyle: CSSProperties = {
   margin: 0,
   fontSize: 12,
@@ -183,7 +188,7 @@ export const DecisionPanel = ({ data }: DecisionPanelProps) => {
 
   return (
     <div style={{ display: "grid", gap: 14 }}>
-      <div style={headerBlockStyle}>
+      <div style={primaryDecisionCardStyle}>
         <p style={labelStyle}>Primary Decision</p>
         <p style={decisionTextStyle}>{data.primaryDecision.message}</p>
       </div>

@@ -1,18 +1,35 @@
-// insights/decision/generateDecision.ts
 import { getConfidenceLabel } from "./getConfidenceLabel";
 import type { Pattern } from "../types/pattern.types";
 import type { Decision } from "../types/decision.types";
 
+const getConfidenceSuffix = (confidence: number): string => {
+  if (confidence >= 0.75) {
+    return "This is a consistent signal.";
+  }
+
+  if (confidence >= 0.5) {
+    return "This appears meaningful, though more validation may help.";
+  }
+
+  return "This may be an early signal, and more data is needed.";
+};
+
 const getDecisionReasoning = (pattern: Pattern): string => {
-  if (pattern.confidence >= 0.75) {
-    return "Strong signal with consistent pattern";
-  }
+  const confidenceSuffix = getConfidenceSuffix(pattern.confidence);
 
-  if (pattern.confidence >= 0.5) {
-    return "Moderate signal, but more validation may be helpful";
-  }
+  switch (pattern.type) {
+    case "conversion_imbalance":
+      return `Some areas are converting less effectively than others, which is lowering overall performance. ${confidenceSuffix}`;
 
-  return "Weak signal and may require more data";
+    case "distribution_concentration":
+      return `Results are too dependent on a small number of dominant sources, which increases risk and limits flexibility. ${confidenceSuffix}`;
+
+    case "target_narrowness":
+      return `Current targeting is concentrated in a narrow range of opportunities, which may be limiting overall reach. ${confidenceSuffix}`;
+
+    default:
+      return `This pattern may affect overall decision quality. ${confidenceSuffix}`;
+  }
 };
 
 export const generateDecision = (pattern: Pattern): Decision => {
@@ -27,7 +44,7 @@ export const generateDecision = (pattern: Pattern): Decision => {
     case "conversion_imbalance":
       return {
         patternType: pattern.type,
-        decision: "Focus on improving conversion in underperforming segments",
+        decision: "Focus on improving conversion in underperforming areas",
         reasoning,
         score: pattern.score?.finalScore ?? 0,
         confidence,

@@ -518,7 +518,7 @@ Logic layer (Week 3) untouched.
 - Extended `mapToDecisionPanel`, `decisionPanel.types`.
 - Completed Decision section in UI
 
-## [2026-04-13] - [2026-04-18]
+## [2026-04-13] - [2026-04-18] Week 6
 
 ## Day 27 - Language & Interpretation Layer
 
@@ -555,3 +555,11 @@ Result: clearer and more scannable decision panel
 - Compressed "Why" and "Outcome" summaries
 
 Result: clearer, more focused decision output
+
+## Day 30 — Narrative Consistency & Flow
+
+- Aligned Decision, Why, Action, and Outcome into a single coherent narrative
+- Replaced technical terms with more user-friendly language (e.g. "segments" → "areas")
+- Refined reasoning to clearly explain the cause of the decision
+- Updated action steps to directly reflect identified problem areas
+- Improved outcome messaging to match decision intent and confidence level
