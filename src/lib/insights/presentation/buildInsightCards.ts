@@ -1,12 +1,12 @@
-import type { InsightNarrative } from "./types/narration.types";
+import type { InsightNarrative } from "../types/narration.types";
 import type {
   BuildInsightCardsParams,
   InsightCard,
   InsightCardNarrative,
-} from "./types/insightCard.types";
+} from "../types/insightCard.types";
 
 const buildNarrativeSections = (
-  narrative?: InsightNarrative
+  narrative?: InsightNarrative,
 ): InsightCardNarrative => {
   if (!narrative) {
     return {

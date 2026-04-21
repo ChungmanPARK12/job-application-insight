@@ -3,7 +3,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { parseCsvText } from "@/domains/processA/parsers/csv";
-import { runInsightPipeline } from "@/lib/insights/runInsightsPipeline";
+import { runInsightPipeline } from "@/lib/insights/pipeline/runInsightsPipeline";
 import { mapToDecisionPanel } from "@/lib/insights/decision/mapToDecisionPanel";
 import { DecisionPanel } from "@/components/insights/DecisionPanel";
 

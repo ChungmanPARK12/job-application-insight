@@ -6,7 +6,7 @@ import {
   type InsightEngineResult,
 } from "./buildInsightEngineResult";
 import type { ApplicationRecord } from "@/types/ApplicationRecord";
-import { buildInteractionInsights } from "./buildInteractionInsight";
+import { buildInteractionInsights } from "../presentation/buildInteractionInsight";
 
 export type InsightPipelineSuccess = {
   ok: true;

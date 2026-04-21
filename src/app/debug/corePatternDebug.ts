@@ -1,8 +1,8 @@
 // src/app/debug/corePatternDebug.ts
 import type { StatsResult } from "@/lib/stats";
-import { buildInsightEngineResult } from "@/lib/insights/buildInsightEngineResult";
+import { buildInsightEngineResult } from "@/lib/insights/pipeline/buildInsightEngineResult";
 import { buildTrendAnalysis } from "@/lib/insights/trends/buildTrendAnalysis";
-import { buildInsightCards } from "@/lib/insights/buildInsightCards";
+import { buildInsightCards } from "@/lib/insights/presentation/buildInsightCards";
 
 const mockStats: StatsResult = {
   overall: {

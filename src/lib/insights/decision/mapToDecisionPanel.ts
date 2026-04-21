@@ -1,4 +1,4 @@
-import type { InsightEngineResult } from "../buildInsightEngineResult";
+import type { InsightEngineResult } from "../pipeline/buildInsightEngineResult";
 import type { DecisionPanelData } from "../types/decisionPanel.types";
 import type { ExecutionStep } from "../types/decision.types";
 

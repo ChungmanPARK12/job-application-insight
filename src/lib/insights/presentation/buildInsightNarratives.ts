@@ -1,6 +1,6 @@
 // src/lib/insights/narrateInsights.ts
 
-import type { PatternFinding } from "./detectInsightPatterns";
+import type { PatternFinding } from "../analysis/detectInsightPatterns";
 
 export type InsightStage =
   | "statistics"
@@ -34,7 +34,7 @@ const getConfidence = (strength: InsightStrength): InsightConfidence => {
 };
 
 export const narrateInsights = (
-  findings: PatternFinding[]
+  findings: PatternFinding[],
 ): InsightSentence[] => {
   return findings.map((f) => {
     const directionText =
@@ -50,11 +50,15 @@ export const narrateInsights = (
         : "";
 
     const text = `${cautiousPrefix} applications in the "${f.key}" group (${f.dimension}) ${directionText} compared to the overall average (${toPercent(
-      f.group_rate
+      f.group_rate,
     )} vs ${toPercent(f.overall_rate)}).${sampleNote}`;
 
     const strength: InsightStrength =
-      f.group_total >= 20 ? "strong" : f.group_total >= 10 ? "moderate" : "weak";
+      f.group_total >= 20
+        ? "strong"
+        : f.group_total >= 10
+          ? "moderate"
+          : "weak";
 
     return {
       dimension: f.dimension,

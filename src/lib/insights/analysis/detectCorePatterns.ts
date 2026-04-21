@@ -2,7 +2,7 @@
 
 import type { StatsResult } from "@/lib/stats";
 import type { BreakdownDimension, BreakdownResult } from "@/lib/stats/types";
-import { Pattern, PatternStrength } from "./types/pattern.types";
+import { Pattern, PatternStrength } from "../types/pattern.types";
 
 // Day1 thresholds (draft v2.0)
 const MIN_WEAK_APPS = 30;
@@ -39,7 +39,7 @@ const typePriority: Record<Pattern["type"], number> = {
 
 export const detectCorePatterns = (
   stats: StatsResult,
-  options: DetectCorePatternsOptions = {}
+  options: DetectCorePatternsOptions = {},
 ): Pattern[] => {
   const minWeakApps = options.minWeakApps ?? MIN_WEAK_APPS;
   const minStrongApps = options.minStrongApps ?? MIN_STRONG_APPS;
@@ -62,11 +62,15 @@ export const detectCorePatterns = (
     totalApps,
     overallInterviewRate,
     minWeakApps,
-    minStrongApps
+    minStrongApps,
   );
   if (p1) patterns.push(p1);
 
-  const p2 = checkDistributionConcentration(stats.breakdowns, totalApps, minWeakApps);
+  const p2 = checkDistributionConcentration(
+    stats.breakdowns,
+    totalApps,
+    minWeakApps,
+  );
   if (p2) patterns.push(p2);
 
   const p3 = checkTargetNarrowness(stats.breakdowns, totalApps, minWeakApps);
@@ -105,7 +109,7 @@ const checkConversionImbalance = (
   totalApps: number,
   interviewRate: number,
   minWeakApps: number,
-  minStrongApps: number
+  minStrongApps: number,
 ): Pattern | null => {
   if (totalApps < minWeakApps) return null;
 
@@ -140,13 +144,13 @@ const checkConversionImbalance = (
 const checkDistributionConcentration = (
   breakdowns: BreakdownResult[],
   totalApps: number,
-  minWeakApps: number
+  minWeakApps: number,
 ): Pattern | null => {
   if (totalApps < minWeakApps) return null;
 
   // Use job_source + location only
   const candidates = breakdowns.filter(
-    (b) => b.dimension === "job_source" || b.dimension === "location"
+    (b) => b.dimension === "job_source" || b.dimension === "location",
   );
 
   // Need at least one meaningful breakdown with >=2 categories
@@ -154,7 +158,8 @@ const checkDistributionConcentration = (
   if (valid.length === 0) return null;
 
   // Find the best dominant ratio among source/location
-  let best: { dim: BreakdownDimension; key: string; ratio: number } | null = null;
+  let best: { dim: BreakdownDimension; key: string; ratio: number } | null =
+    null;
 
   for (const b of valid) {
     const dom = getDominantFromBreakdown(b, totalApps);
@@ -192,7 +197,7 @@ const checkDistributionConcentration = (
 const checkTargetNarrowness = (
   breakdowns: BreakdownResult[],
   totalApps: number,
-  minWeakApps: number
+  minWeakApps: number,
 ): Pattern | null => {
   if (totalApps < minWeakApps) return null;
 
@@ -230,7 +235,7 @@ const checkTargetNarrowness = (
 // --------------------------
 const getDominantFromBreakdown = (
   b: BreakdownResult,
-  totalApps: number
+  totalApps: number,
 ): { key: string; ratio: number } | null => {
   if (!b.rows || b.rows.length === 0) return null;
 

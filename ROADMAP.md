@@ -428,7 +428,7 @@ Ensure the decision panel reads as a single coherent narrative
 
 ---
 
-## End of Week 6 State
+## End of Week 6 State(Completed)
 
 - Decision system is not only functional but **usable and intuitive**
 - Output is:
@@ -436,3 +436,147 @@ Ensure the decision panel reads as a single coherent narrative
   - Concise
   - Actionable
 - System behaves like a **decision-making assistant**, not just an analytics tool
+
+# Week 7 Roadmap (Algorithmic Intelligence Layer)
+
+## Goal
+
+Upgrade the decision engine from a rule-based system into a more advanced, algorithm-driven intelligence layer.
+
+Shift focus:
+
+- From **rule-based filtering** → to **algorithmic prioritization**
+- From **static logic** → to **adaptive decision modeling**
+- From **basic signals** → to **structured, high-quality insights**
+
+---
+
+## Day 31 — Signal Deduplication Engine
+
+### Goal
+
+Reduce redundancy by merging similar or overlapping signals into a single, meaningful insight.
+
+### Tasks
+
+- Define grouping keys for similar patterns
+- Implement deduplication logic (e.g. same dimension or semantic overlap)
+- Select a representative signal from each group
+- Preserve important metadata (score, confidence, metrics)
+
+### Expected Outcome
+
+- Cleaner supporting signals
+- Reduced repetition in the decision panel
+- More concise and meaningful insights
+
+---
+
+## Day 32 — Advanced Ranking Logic
+
+### Goal
+
+Improve prioritization by introducing multi-factor ranking instead of relying on a single score.
+
+### Tasks
+
+- Design a weighted ranking model using:
+  - score
+  - confidence
+  - sample size
+  - pattern strength
+- Normalize and combine multiple factors
+- Replace simple sorting with composite ranking logic
+
+### Expected Outcome
+
+- More accurate prioritization of signals
+- Better alignment between importance and visibility
+- Stronger decision relevance
+
+---
+
+## Day 33 — Confidence Calibration
+
+### Goal
+
+Make confidence more reliable and explainable by incorporating multiple contributing factors.
+
+### Tasks
+
+- Decompose confidence into:
+  - sample sufficiency
+  - signal consistency
+  - pattern strength
+- Design a calibration function to combine factors
+- Adjust confidence labels based on calibrated values
+
+### Expected Outcome
+
+- More trustworthy confidence levels
+- Better alignment between data quality and system output
+- Improved interpretability of decisions
+
+---
+
+## Day 34 — Outcome Projection Upgrade
+
+### Goal
+
+Enhance outcome predictions using structured logic instead of static messaging.
+
+### Tasks
+
+- Introduce a decision impact matrix:
+  - pattern type
+  - confidence level
+  - pattern strength
+- Adjust outcome direction and magnitude dynamically
+- Refine expected improvement messaging
+
+### Expected Outcome
+
+- More realistic and data-aligned outcome projections
+- Better consistency between decision and expected results
+- Stronger user trust in predictions
+
+---
+
+## Day 35 — Explanation Consistency Engine
+
+### Goal
+
+Ensure all parts of the decision panel follow a consistent narrative structure.
+
+### Tasks
+
+- Align terminology across:
+  - Decision
+  - Why
+  - Action
+  - Outcome
+- Implement template-based explanation generation
+- Enforce consistent use of key concepts (e.g. conversion, distribution, targeting)
+
+### Expected Outcome
+
+- Fully coherent decision narrative
+- Improved readability and flow
+- Output feels like a unified recommendation
+
+---
+
+## End of Week 7 State
+
+- Decision engine is no longer purely rule-based
+- System incorporates structured algorithms for:
+  - ranking
+  - filtering
+  - confidence modeling
+  - outcome projection
+- Output is:
+  - More precise
+  - More reliable
+  - More scalable
+
+System evolves from a **rule-based assistant** into an **algorithmic decision engine**

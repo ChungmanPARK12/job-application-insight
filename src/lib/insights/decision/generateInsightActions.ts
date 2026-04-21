@@ -1,6 +1,6 @@
 // lib/insights/generateInsightActions.ts
-import type { RankedPattern } from "./rankInsightPatterns";
-import type { InsightAction, ActionPriority } from "./types/action.types";
+import type { RankedPattern } from "../analysis/rankInsightPatterns";
+import type { InsightAction, ActionPriority } from "../types/action.types";
 
 const getMetric = (
   metrics: Record<string, unknown>,

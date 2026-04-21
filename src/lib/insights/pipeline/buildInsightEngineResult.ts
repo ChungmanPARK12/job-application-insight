@@ -1,18 +1,21 @@
 // src/lib/insights/buildInsightEngineResult.ts
 import type { StatsResult } from "@/lib/stats";
-import { detectCorePatterns } from "./detectCorePatterns";
-import { narrateCorePatterns } from "./narrateCorePatterns";
-import { calculateInsightScore } from "./scoring/calculateInsightScore";
-import { rankPatterns, type RankedPattern } from "./rankInsightPatterns";
-import { filterPatternsForExposure } from "./filterInsightPatterns";
-import { generateInsightActions } from "./generateInsightActions";
-import { generateDecision } from "./decision/generateDecision";
-import { buildExecutionPlan } from "./decision/buildExcecutionPlan";
-import { buildOutcomeProjection } from "./decision/buildOutcomeProjection";
-import type { FilteredPattern } from "./types/exposure.types";
-import type { InsightNarrative } from "./types/narration.types";
-import type { InsightAction } from "./types/action.types";
-import type { Decision } from "./types/decision.types";
+import { detectCorePatterns } from "../analysis/detectCorePatterns";
+import { narrateCorePatterns } from "../presentation/narrateCorePatterns";
+import { calculateInsightScore } from "../scoring/calculateInsightScore";
+import {
+  rankPatterns,
+  type RankedPattern,
+} from "../analysis/rankInsightPatterns";
+import { filterPatternsForExposure } from "../analysis/filterInsightPatterns";
+import { generateInsightActions } from "../decision/generateInsightActions";
+import { generateDecision } from "../decision/generateDecision";
+import { buildExecutionPlan } from "../decision/buildExcecutionPlan";
+import { buildOutcomeProjection } from "../decision/buildOutcomeProjection";
+import type { FilteredPattern } from "../types/exposure.types";
+import type { InsightNarrative } from "../types/narration.types";
+import type { InsightAction } from "../types/action.types";
+import type { Decision } from "../types/decision.types";
 
 export type InsightEngineResult = {
   stats: StatsResult;

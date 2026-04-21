@@ -1,4 +1,4 @@
-import type { RankedPattern } from "../rankInsightPatterns";
+import type { RankedPattern } from "../analysis/rankInsightPatterns";
 
 export type ExposureDecision =
   | "show"

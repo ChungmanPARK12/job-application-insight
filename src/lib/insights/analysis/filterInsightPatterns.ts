@@ -1,5 +1,8 @@
 import type { RankedPattern } from "./rankInsightPatterns";
-import type { FilteredPattern, ExposureDecision } from "./types/exposure.types";
+import type {
+  FilteredPattern,
+  ExposureDecision,
+} from "../types/exposure.types";
 
 const MIN_SAMPLE_SIZE = 5;
 const MIN_CONFIDENCE = 0.5;

@@ -1,5 +1,5 @@
 // src/lib/insights/rankPatterns.ts
-import type { Pattern } from "./types/pattern.types";
+import type { Pattern } from "../types/pattern.types";
 
 export type RankedPattern = Pattern & {
   rank: number;
@@ -26,16 +26,14 @@ export const rankPatterns = (patterns: Pattern[]): RankedPattern[] => {
     }
 
     const strengthDiff =
-      (strengthPriority[b.strength] ?? 0) -
-      (strengthPriority[a.strength] ?? 0);
+      (strengthPriority[b.strength] ?? 0) - (strengthPriority[a.strength] ?? 0);
 
     if (strengthDiff !== 0) {
       return strengthDiff;
     }
 
     const patternDiff =
-      (patternPriority[b.type] ?? 0) -
-      (patternPriority[a.type] ?? 0);
+      (patternPriority[b.type] ?? 0) - (patternPriority[a.type] ?? 0);
 
     if (patternDiff !== 0) {
       return patternDiff;

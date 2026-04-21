@@ -1,17 +1,19 @@
 // src/lib/insights/narrateCorePatterns.ts
 
-import type { Pattern } from "./types/pattern.types";
+import type { Pattern } from "../types/pattern.types";
 import type {
   InsightNarrative,
   InsightConfidence,
   InsightStage,
-} from "./types/narration.types";
+} from "../types/narration.types";
 
 type StageBand = "early" | "mid" | "late";
 type ConfidenceTone = "cautious" | "measured" | "firm";
 
 // Neutral, report-style wording only
-export const narrateCorePatterns = (patterns: Pattern[]): InsightNarrative[] => {
+export const narrateCorePatterns = (
+  patterns: Pattern[],
+): InsightNarrative[] => {
   return patterns.map(buildNarrative);
 };
 
@@ -194,11 +196,11 @@ const buildStageConfidenceBoundary = ({
 
 const buildConversionBoundary = (
   stageBand: StageBand,
-  confidenceTone: ConfidenceTone
+  confidenceTone: ConfidenceTone,
 ): string => {
   if (stageBand === "early") {
     if (confidenceTone === "firm") {
-      return `At this stage, the difference appears notable, though early-stage distributions may still shift as additional records accumulate.`; 
+      return `At this stage, the difference appears notable, though early-stage distributions may still shift as additional records accumulate.`;
     }
 
     if (confidenceTone === "measured") {
@@ -233,7 +235,7 @@ const buildConversionBoundary = (
 
 const buildDistributionBoundary = (
   stageBand: StageBand,
-  confidenceTone: ConfidenceTone
+  confidenceTone: ConfidenceTone,
 ): string => {
   if (stageBand === "early") {
     if (confidenceTone === "firm") {
@@ -272,7 +274,7 @@ const buildDistributionBoundary = (
 
 const buildTargetBoundary = (
   stageBand: StageBand,
-  confidenceTone: ConfidenceTone
+  confidenceTone: ConfidenceTone,
 ): string => {
   if (stageBand === "early") {
     if (confidenceTone === "firm") {
@@ -311,7 +313,7 @@ const buildTargetBoundary = (
 
 const buildGenericStageConfidenceBoundary = (
   stageBand: StageBand,
-  confidenceTone: ConfidenceTone
+  confidenceTone: ConfidenceTone,
 ): string => {
   if (stageBand === "early") {
     if (confidenceTone === "firm") {
