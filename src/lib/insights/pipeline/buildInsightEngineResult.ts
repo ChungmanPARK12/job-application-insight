@@ -12,6 +12,7 @@ import { generateInsightActions } from "../decision/generateInsightActions";
 import { generateDecision } from "../decision/generateDecision";
 import { buildExecutionPlan } from "../decision/buildExcecutionPlan";
 import { buildOutcomeProjection } from "../decision/buildOutcomeProjection";
+import { deduplicateSignals } from "../analysis/deduplicateSignals";
 import type { FilteredPattern } from "../types/exposure.types";
 import type { InsightNarrative } from "../types/narration.types";
 import type { InsightAction } from "../types/action.types";
@@ -37,7 +38,9 @@ export const buildInsightEngineResult = (
     score: calculateInsightScore(pattern),
   }));
 
-  const rankedPatterns = rankPatterns(scoredPatterns);
+  const deduplicatedPatterns = deduplicateSignals(scoredPatterns);
+
+  const rankedPatterns = rankPatterns(deduplicatedPatterns);
 
   const filteredPatterns = filterPatternsForExposure(rankedPatterns);
 
@@ -80,6 +83,13 @@ export const buildInsightEngineResult = (
   console.log("primaryDecision", primaryDecision);
   console.log("supportingSignals", supportingSignals);
   console.log("actions", actions);
+
+  console.log("=== DEDUP DEBUG ===");
+  console.log("scored count:", scoredPatterns.length);
+  console.log("deduplicated count:", deduplicatedPatterns.length);
+
+  console.log("scoredPatterns:", scoredPatterns);
+  console.log("deduplicatedPatterns:", deduplicatedPatterns);
 
   return {
     stats,

@@ -570,4 +570,26 @@ Result: clearer, more focused decision output
 
 - Analysis Layer, `detectCorePatterns`, `rankInsightPatterns` and fins the patterns
 - Decision Layer, `generateDecision`, `buildExecutionPlan`, `buildOutcomeProjection`
--
+
+## Note — Threshold Adjustment (Planned)
+
+- Current minimum application threshold (e.g. `MIN_WEAK_APPS = 30`) may be too high for early-stage users
+- This can delay meaningful insights due to insufficient data volume
+- Planned to revisit during **Week 7 — Day 33 (Confidence Calibration)**
+
+Planned changes:
+
+- Introduce multi-level thresholds (early signal vs reliable signal)
+- Align thresholds with realistic user data collection pace
+- Adjust confidence and exposure logic accordingly
+
+## [2026-04-30] - [2026-04-31] Week 7
+
+- Added signal deduplication (`deduplicateSignals`)
+- Integrated into pipeline (after scoring, before ranking)
+- Grouped similar patterns and selected representative signals
+
+Result:
+
+- Reduced potential redundancy in signals
+- Prepared cleaner input for ranking (Day 32)
