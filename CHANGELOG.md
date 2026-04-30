@@ -593,3 +593,22 @@ Result:
 
 - Reduced potential redundancy in signals
 - Prepared cleaner input for ranking (Day 32)
+
+## [Day 32] Advanced Ranking Logic
+
+### Added
+
+- Introduced composite ranking model (`rankScore`)
+  - Combined factors: score, confidence, sample size, pattern strength
+- Implemented sample size extraction from metrics (`applications`)
+- Added normalization for score and sample size
+
+### Updated
+
+- Replaced single-score sorting with multi-factor ranking
+- Updated ranking pipeline to use `rankScore` for prioritization
+
+### Result
+
+- Improved prioritization accuracy of insight patterns
+- Ranking now reflects both signal quality and data reliability

@@ -77,19 +77,34 @@ export const buildInsightEngineResult = (
   const narratives = narrateCorePatterns(exposedPatterns);
   const actions = generateInsightActions(exposedPatterns);
 
-  console.log("rankedPatterns", rankedPatterns);
-  console.log("filteredPatterns", filteredPatterns);
-  console.log("exposedPatterns", exposedPatterns);
-  console.log("primaryDecision", primaryDecision);
-  console.log("supportingSignals", supportingSignals);
-  console.log("actions", actions);
+  console.log("=== DAY 32 RANKING DEBUG ===");
 
-  console.log("=== DEDUP DEBUG ===");
-  console.log("scored count:", scoredPatterns.length);
-  console.log("deduplicated count:", deduplicatedPatterns.length);
+  rankedPatterns.forEach((pattern) => {
+    console.log({
+      rank: pattern.rank,
+      type: pattern.type,
+      finalScore: pattern.score?.finalScore,
+      confidence: pattern.confidence,
+      sampleSize:
+        pattern.metrics?.sampleSize ??
+        pattern.metrics?.applications ??
+        pattern.metrics?.totalCount ??
+        pattern.metrics?.count,
+      strength: pattern.strength,
+      rankScore: pattern.rankScore,
+    });
+  });
 
-  console.log("scoredPatterns:", scoredPatterns);
-  console.log("deduplicatedPatterns:", deduplicatedPatterns);
+  console.log("=== EXPOSURE DEBUG ===");
+
+  filteredPatterns.forEach((pattern) => {
+    console.log({
+      rank: pattern.rank,
+      type: pattern.type,
+      shouldExpose: pattern.shouldExpose,
+      rankScore: pattern.rankScore,
+    });
+  });
 
   return {
     stats,

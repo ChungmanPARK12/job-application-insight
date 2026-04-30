@@ -52,6 +52,24 @@ export const runInsightPipeline = (
 
   const stats = buildStatsResult(csvResult.records);
   const insightResult = buildInsightEngineResult(stats);
+
+  console.log("=== DAY 32 RANKING DEBUG ===");
+
+  insightResult.filteredPatterns.forEach((pattern) => {
+    console.log({
+      rank: pattern.rank,
+      type: pattern.type,
+      finalScore: pattern.score?.finalScore,
+      confidence: pattern.confidence,
+      sampleSize:
+        pattern.metrics?.sampleSize ??
+        pattern.metrics?.totalCount ??
+        pattern.metrics?.count,
+      strength: pattern.strength,
+      rankScore: pattern.rankScore,
+    });
+  });
+
   const interactions = buildInteractionInsights(insightResult.patterns);
 
   return {
